@@ -15,6 +15,10 @@ public abstract class JDBC {
     private static String password = "Passw0rd!"; // Password
     public static Connection connection;  // Connection Interface
 
+    public static Connection getConnection() {
+        return connection;
+    }
+
     public static void openConnection()
     {
         try {
