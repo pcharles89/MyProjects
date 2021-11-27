@@ -25,10 +25,9 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) throws SQLException {
-        /* JDBC.openConnection();
+        /*JDBC.openConnection();
         Connection conn = JDBC.getConnection();
-        Query.setPreparedStatement(JDBC.connection);
-        Statement statement = Query.getPreparedStatement(); */
+        Statement statement = conn.createStatement(); */
 
         Locale.setDefault(new Locale("fr"));
         ResourceBundle rb = ResourceBundle.getBundle("Utilities/Nat_fr", Locale.getDefault());
