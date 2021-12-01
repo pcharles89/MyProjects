@@ -1,19 +1,22 @@
 package Controller;
 
+import DAO.CustomerDAO;
 import Model.Customer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class MainFormController implements Initializable {
@@ -57,10 +60,11 @@ public class MainFormController implements Initializable {
     private TextField searchBarTf;
 
     @FXML
-    private Button searchBtn;
-
-    @FXML
-    void addCustomer(ActionEvent event) {
+    void addCustomer(ActionEvent event) throws IOException {
+        stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        scene = FXMLLoader.load(getClass().getResource("/View/AddCustomer.fxml"));
+        stage.setScene(new Scene(scene));
+        stage.show();
 
     }
 
@@ -71,11 +75,49 @@ public class MainFormController implements Initializable {
 
     @FXML
     void onEnterCustomer(KeyEvent event) {
+        if (event.getCode().equals(KeyCode.ENTER)) {
+            custTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+            custTableView.getSelectionModel().clearSelection();
+            String search = searchBarTf.getText();
+            for(Customer customer: custTableView.getItems()) {
+                if(searchBarTf.getText().equals("")) {
+                    custTableView.getSelectionModel().select(null);
+                    break;
+                }
+                else if(customer.getName().contains(search) || Integer.toString(customer.getId()).contains(search)) {
+                    custTableView.getSelectionModel().select(customer);
+                }
+            }
+            if (custTableView.getSelectionModel().isEmpty() && (!(searchBarTf.getText().equals("")))) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Dialogue");
+                alert.setContentText("Search result not found.");
+                alert.showAndWait();
+            }
 
+        }
     }
 
     @FXML
-    void searchForPart(ActionEvent event) {
+    void searchForCustomer(ActionEvent event) {
+        custTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        custTableView.getSelectionModel().clearSelection();
+        String search = searchBarTf.getText();
+        for(Customer customer: custTableView.getItems()) {
+            if(searchBarTf.getText().equals("")) {
+                custTableView.getSelectionModel().select(null);
+                break;
+            }
+            else if(customer.getName().contains(search) || Integer.toString(customer.getId()).contains(search)) {
+                custTableView.getSelectionModel().select(customer);
+            }
+        }
+        if (custTableView.getSelectionModel().isEmpty() && (!(searchBarTf.getText().equals("")))) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialogue");
+            alert.setContentText("Search result not found.");
+            alert.showAndWait();
+        }
 
     }
 
@@ -91,7 +133,11 @@ public class MainFormController implements Initializable {
 
     @Override
     public void initialize (URL url, ResourceBundle resourceBundle) {
-        custTableView.setItems(Customer.getAllCustomers());
+        try {
+            custTableView.setItems(CustomerDAO.getAllCustomers());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         custIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         custNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         custAddressCol.setCellValueFactory(new PropertyValueFactory<>("address"));
