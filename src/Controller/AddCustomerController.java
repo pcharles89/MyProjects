@@ -1,6 +1,6 @@
 package Controller;
 
-import DAO.CountryDAO;
+import DAO.*;
 import Model.Country;
 import Model.FLDivision;
 import javafx.collections.FXCollections;
@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -23,6 +24,7 @@ import java.util.ResourceBundle;
 public class AddCustomerController implements Initializable {
     private Stage stage;
     private Parent scene;
+    private static String country;
     private static ObservableList<Country> countries = FXCollections.observableArrayList();
     private static ObservableList<FLDivision> divisions = FXCollections.observableArrayList();
 
@@ -33,10 +35,10 @@ public class AddCustomerController implements Initializable {
     private TextField custNameTf;
 
     @FXML
-    private TextField custPostalCodeCB;
+    private TextField custPostalCodeTf;
 
     @FXML
-    private TextField custPhoneCB;
+    private TextField custPhoneTf;
 
     @FXML
     private TextField custAddressTf;
@@ -68,12 +70,44 @@ public class AddCustomerController implements Initializable {
     }
 
     @FXML
-    void saveCustomer(ActionEvent event) {
+    void selectCountry(ActionEvent event) throws SQLException {
+        String country = custCountryCB.getSelectionModel().getSelectedItem().toString();
+        custDivisionCB.setItems(FLDivisionDAO.getFilteredDivisions(country));
 
+    }
+
+    @FXML
+    void selectDivision(ActionEvent event) throws SQLException {
+
+    }
+
+    @FXML
+    void saveCustomer(ActionEvent event) throws SQLException, IOException {
+        try {
+            CustomerDAO.createCustomer(Integer.parseInt(custIdLbl.getText()), custNameTf.getText(), custAddressTf.getText(),
+                    custPostalCodeTf.getText(), custPhoneTf.getText(),
+                    Integer.parseInt(String.valueOf(custDivisionCB.getSelectionModel().getSelectedItem().getId())));
+
+            stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+            scene = FXMLLoader.load(getClass().getResource("/View/MainForm.fxml"));
+            stage.setScene(new Scene(scene));
+            stage.show();
+
+        } catch (NumberFormatException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialogue");
+            alert.setContentText("Please enter a valid value for each text field.");
+            alert.showAndWait();
+        }
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        try {
+            custIdLbl.setText(String.valueOf(CustomerDAO.getAllCustomers().size()+1));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         try {
             custCountryCB.setItems(CountryDAO.getAllCountries());
         } catch (SQLException e) {
@@ -81,6 +115,6 @@ public class AddCustomerController implements Initializable {
         }
             custCountryCB.setPromptText("Please select a country");
             custDivisionCB.setPromptText("Please select a state/province");
-            custDivisionCB.setItems(divisions);
+
     }
 }

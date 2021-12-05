@@ -4,7 +4,7 @@ import Model.Customer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -29,5 +29,22 @@ public class CustomerDAO {
         }
         JDBC.closeConnection();
         return allCustomers;
+    }
+
+    public static void createCustomer(int custId, String custName, String address, String pCode, String phone, int divId)
+            throws SQLException {
+        String insertStatement = "INSERT INTO client_schedule.customers(Customer_ID, Customer_Name, Address, Postal_Code," +
+                "Phone, Division_ID) VALUES(?,?,?,?,?,?)";
+        JDBC.openConnection();
+        Query.setPreparedStatement(JDBC.getConnection(), insertStatement);
+        PreparedStatement ps = Query.getPreparedStatement();
+        ps.setInt(1, custId);
+        ps.setString(2, custName);
+        ps.setString(3, address);
+        ps.setString(4, pCode);
+        ps.setString(5, phone);
+        ps.setInt(6, divId);
+
+        ps.executeUpdate();
     }
 }

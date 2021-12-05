@@ -5,6 +5,16 @@ public class FLDivision {
     private String division;
     private int countryId;
 
+    public FLDivision(int id, String division, int countryId) {
+        this.id = id;
+        this.division = division;
+        this.countryId = countryId;
+    }
+
+    public FLDivision() {
+
+    }
+
     public int getId() {
         return id;
     }
@@ -27,5 +37,10 @@ public class FLDivision {
 
     public void setCountryId(int countryId) {
         this.countryId = countryId;
+    }
+
+    @Override
+    public String toString() {
+        return "[" + id + "] " + division;
     }
 }
