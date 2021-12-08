@@ -47,4 +47,29 @@ public class CustomerDAO {
 
         ps.executeUpdate();
     }
+
+    public static void updateCustomer(int index, Customer customer) throws SQLException {
+        Customer searchedCustomer = CustomerDAO.lookUpCustomer(index);
+        CustomerDAO.deleteCustomer(searchedCustomer);
+        CustomerDAO.createCustomer(customer.getId(), customer.getName(), customer.getAddress(), customer.getPostalCode(),
+                customer.getPhone(), customer.getDivisionId());
+    }
+
+    public static Customer lookUpCustomer(int customerID) throws SQLException {
+        for(Customer customer: CustomerDAO.getAllCustomers()) {
+            if(customer.getId() == customerID) {
+                return customer;
+            }
+        }
+        return null;
+    }
+
+    public static void deleteCustomer(Customer customer) throws SQLException {
+        String deleteStatement = "DELETE FROM client_schedule.customers WHERE Customer_ID = ?";
+        JDBC.openConnection();
+        Query.setPreparedStatement(JDBC.getConnection(), deleteStatement);
+        PreparedStatement ps = Query.getPreparedStatement();
+        ps.setInt(1, customer.getId());
+        ps.executeUpdate();
+    }
 }

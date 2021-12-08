@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -83,22 +84,24 @@ public class AddCustomerController implements Initializable {
 
     @FXML
     void saveCustomer(ActionEvent event) throws SQLException, IOException {
-        try {
-            CustomerDAO.createCustomer(Integer.parseInt(custIdLbl.getText()), custNameTf.getText(), custAddressTf.getText(),
-                    custPostalCodeTf.getText(), custPhoneTf.getText(),
-                    Integer.parseInt(String.valueOf(custDivisionCB.getSelectionModel().getSelectedItem().getId())));
+            if(((custNameTf.getText().equals("")) || (custAddressTf.getText().equals("")) || (custPostalCodeTf.getText().equals(""))
+                || (custPhoneTf.getText().equals("")) || (custDivisionCB.getSelectionModel().getSelectedItem() == null))) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Dialogue");
+                alert.setContentText("Please enter a valid value for each field.");
+                alert.showAndWait();
+            }
+            else {
+                CustomerDAO.createCustomer(Integer.parseInt(custIdLbl.getText()), custNameTf.getText(), custAddressTf.getText(),
+                        custPostalCodeTf.getText(), custPhoneTf.getText(),
+                        Integer.parseInt(String.valueOf(custDivisionCB.getSelectionModel().getSelectedItem().getId())));
 
-            stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-            scene = FXMLLoader.load(getClass().getResource("/View/MainForm.fxml"));
-            stage.setScene(new Scene(scene));
-            stage.show();
+                stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+                scene = FXMLLoader.load(getClass().getResource("/View/MainForm.fxml"));
+                stage.setScene(new Scene(scene));
+                stage.show();
+            }
 
-        } catch (NumberFormatException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error Dialogue");
-            alert.setContentText("Please enter a valid value for each text field.");
-            alert.showAndWait();
-        }
     }
 
     @Override

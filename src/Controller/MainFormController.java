@@ -88,11 +88,19 @@ public class MainFormController implements Initializable {
                 ps.setInt(1, custTableView.getSelectionModel().getSelectedItem().getId());
                 ps.executeUpdate();
 
+                Alert alert2 = new Alert(Alert.AlertType.WARNING);
+                alert2.setTitle("Warning Dialogue");
+                String customerId = String.valueOf(custTableView.getSelectionModel().getSelectedItem().getId());
+                String customerName = custTableView.getSelectionModel().getSelectedItem().getName();
+                alert2.setContentText("Customer[" + customerId + "] " + customerName + " was deleted.");
+                alert2.showAndWait();
+
                 stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
                 scene = FXMLLoader.load(getClass().getResource("/View/MainForm.fxml"));
                 stage.setScene(new Scene(scene));
                 stage.show();
                 custTableView.getItems().remove(custTableView.getSelectionModel().getSelectedItem());
+
             }
         }
         else {
@@ -152,7 +160,7 @@ public class MainFormController implements Initializable {
     }
 
     @FXML
-    void updateCustomer(ActionEvent event) throws IOException {
+    void updateCustomer(ActionEvent event) throws IOException, SQLException {
         if(!(custTableView.getSelectionModel().getSelectedItems().isEmpty())) {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/View/UpdateCustomer.fxml"));

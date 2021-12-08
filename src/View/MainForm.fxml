@@ -25,7 +25,7 @@
             <Button fx:id="addBtn" mnemonicParsing="false" onAction="#addCustomer" text="Add" />
             <Button fx:id="updateBtn" mnemonicParsing="false" onAction="#updateCustomer" text="Update" />
             <Button fx:id="deleteBtn" mnemonicParsing="false" onAction="#deleteCustomer" text="Delete" />
-            <Button fx:id="viewApptBtn" mnemonicParsing="false" onAction="#viewAppts" text="View Appts" />
+            <Button fx:id="viewApptBtn" mnemonicParsing="false" onAction="#viewAppts" text="View All Appointments" />
          </children>
          <padding>
             <Insets top="20.0" />

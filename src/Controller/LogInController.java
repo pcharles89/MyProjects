@@ -54,7 +54,8 @@ public class LogInController implements Initializable {
 
     @FXML
     void clickEnterButton(ActionEvent event) throws IOException {
-        if((usernameTextField.getText().equals("test")) && (passwordTextField.getText().equals("test"))) {
+        if(((usernameTextField.getText().equals("test")) && (passwordTextField.getText().equals("test"))) ||
+                ((usernameTextField.getText().equals("admin")) && (passwordTextField.getText().equals("admin")))) {
             JDBC.openConnection();
             stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
             scene = FXMLLoader.load(getClass().getResource("/View/MainForm.fxml"));

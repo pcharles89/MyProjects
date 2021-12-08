@@ -4,7 +4,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class Customer {
-    private static ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
+    public static ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
+    public static ObservableList<Customer> filteredCustomers = FXCollections.observableArrayList();
     private int id;
     private String name;
     private String address;
