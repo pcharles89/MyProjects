@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -181,8 +182,11 @@ public class MainFormController implements Initializable {
     }
 
     @FXML
-    void viewAppts(ActionEvent event) {
-
+    void viewAppts(ActionEvent event) throws IOException {
+        stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        scene = FXMLLoader.load(getClass().getResource("/View/CustAppts.fxml"));
+        stage.setScene(new Scene(scene));
+        stage.show();
     }
 
     @Override
