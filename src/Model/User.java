@@ -5,6 +5,16 @@ public class User {
     private String userName;
     private String password;
 
+    public User(int id, String userName, String password) {
+        this.id = id;
+        this.userName = userName;
+        this.password = password;
+    }
+
+    public User() {
+
+    }
+
     public int getId() {
         return id;
     }
@@ -27,5 +37,10 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(id);
     }
 }

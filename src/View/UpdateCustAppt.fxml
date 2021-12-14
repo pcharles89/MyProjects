@@ -1,14 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="Controller.UpdateCustApptController"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.UpdateCustApptController">
+    <children>
+        <AnchorPane layoutX="10.0" layoutY="35.0" prefHeight="326.0" prefWidth="578.0" style="-fx-border-color: black; -fx-border-radius: 10;">
+            <children>
+                <GridPane layoutX="22.0" layoutY="16.0" prefHeight="291.0" prefWidth="322.0">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="147.20001220703125" minWidth="10.0" prefWidth="78.9999755859375" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="243.20002441406254" minWidth="10.0" prefWidth="243.20002441406254" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <children>
+                        <Label text="Appt ID" />
+                        <Label fx:id="apptIdLbl" text="Label" GridPane.columnIndex="1" />
+                        <Label text="Description" GridPane.rowIndex="2" />
+                        <Label text="Location" GridPane.rowIndex="3" />
+                        <Label text="Contact" GridPane.rowIndex="4" />
+                        <Label text="Type" GridPane.rowIndex="5" />
+                        <Label text="Start" GridPane.rowIndex="6" />
+                        <Label text="End" GridPane.rowIndex="7" />
+                        <Label text="Customer ID" GridPane.rowIndex="8" />
+                        <Label text="User ID" GridPane.rowIndex="9" />
+                        <HBox prefHeight="25.0" prefWidth="86.0" spacing="7.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                            <children>
+                                <DatePicker fx:id="startDp" prefHeight="26.0" prefWidth="119.0" />
+                                <ComboBox fx:id="startTimeCb" prefHeight="26.0" prefWidth="114.0" />
+                            </children>
+                        </HBox>
+                        <Label text="Title" GridPane.rowIndex="1" />
+                        <ComboBox fx:id="endTimeCb" prefHeight="26.0" prefWidth="121.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                            <GridPane.margin>
+                                <Insets />
+                            </GridPane.margin>
+                        </ComboBox>
+                        <TextField fx:id="titleTf" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <TextField fx:id="descriptionTf" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <TextField fx:id="locationTf" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <ComboBox fx:id="contactCb" prefHeight="26.0" prefWidth="149.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <TextField fx:id="typeTf" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <ComboBox fx:id="custIdCb" prefHeight="26.0" prefWidth="86.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                        <ComboBox fx:id="userIdCb" prefHeight="26.0" prefWidth="87.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                    </children>
+                </GridPane>
+            </children>
+        </AnchorPane>
+        <HBox alignment="CENTER" layoutX="353.0" layoutY="368.0" prefHeight="25.0" prefWidth="200.0" spacing="20.0">
+            <children>
+                <Button fx:id="saveApptRbtn" mnemonicParsing="false" onAction="#saveApptAction" text="Save" />
+                <Button fx:id="cancelApptRbtn" mnemonicParsing="false" onAction="#backToViewAppts" text="Cancel" />
+            </children>
+        </HBox>
+        <Label fx:id="addApptLbl" contentDisplay="CENTER" layoutX="30.0" layoutY="14.0" text="Update Appointment">
+            <font>
+                <Font name="System Bold" size="14.0" />
+            </font>
+        </Label>
+    </children>
 </AnchorPane>

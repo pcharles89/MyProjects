@@ -73,7 +73,6 @@ public class MainFormController implements Initializable {
         scene = FXMLLoader.load(getClass().getResource("/View/AddCustomer.fxml"));
         stage.setScene(new Scene(scene));
         stage.show();
-
     }
 
     @FXML

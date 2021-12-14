@@ -5,6 +5,16 @@ public class Contact {
     private String name;
     private String email;
 
+    public Contact(int id, String name, String email) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+    }
+
+    public Contact() {
+
+    }
+
     public int getId() {
         return id;
     }
@@ -27,6 +37,11 @@ public class Contact {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 
 }

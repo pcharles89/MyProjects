@@ -130,8 +130,11 @@ public class CustApptsController implements Initializable {
     }
 
     @FXML
-    void displayAddForm(ActionEvent event) {
-
+    void displayAddForm(ActionEvent event) throws IOException {
+        stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        scene = FXMLLoader.load(getClass().getResource("/View/AddCustAppt.fxml"));
+        stage.setScene(new Scene(scene));
+        stage.show();
     }
 
     @FXML
