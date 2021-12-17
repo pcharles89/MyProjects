@@ -20,13 +20,19 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.*;
+import java.time.chrono.ChronoZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class AddCustApptController implements Initializable {
     private Stage stage;
     private Parent scene;
-    //private static ObservableList<LocalTime> startTimes = FXCollections.observableArrayList();
+    private static final LocalTime firstAppt = LocalTime.of(8,0,0);
+    private static final LocalTime lastAppt = LocalTime.of(21,45, 0);
+    private static final LocalTime businessClose = LocalTime.of(22, 0, 0);
+    private static final LocalTime earliestFirstApptEnd = LocalTime.of(8, 15, 0);
+
 
     @FXML
     private Label apptIdLbl;
@@ -83,8 +89,8 @@ public class AddCustApptController implements Initializable {
     }
 
     @FXML
-    void saveApptAction(ActionEvent event) throws IOException {
-        /*if(((titleTf.getText().equals("")) || (descriptionTf.getText().equals("")) || (locationTf.getText().equals(""))
+    void saveApptAction(ActionEvent event) throws IOException, SQLException {
+        if(((titleTf.getText().equals("")) || (descriptionTf.getText().equals("")) || (locationTf.getText().equals(""))
                 || (typeTf.getText().equals("")) || (contactCb.getSelectionModel().getSelectedItem() == null) ||
         (startDp.getValue() == null) || (startTimeCb.getSelectionModel().getSelectedItem() == null) ||
                 (endTimeCb.getSelectionModel().getSelectedItem() == null) || (custIdCb.getSelectionModel().getSelectedItem() == null)
@@ -95,30 +101,57 @@ public class AddCustApptController implements Initializable {
             alert.showAndWait();
         }
         LocalDate apptStartDate = startDp.getValue();
-        LocalTime apptStartTime = (LocalTime) startTimeCb.getSelectionModel().getSelectedItem();
+        LocalTime apptStartTime = startTimeCb.getSelectionModel().getSelectedItem();
+        LocalDateTime appt = LocalDateTime.of(apptStartDate.getYear(), apptStartDate.getMonth(), apptStartDate.getDayOfMonth(),
+                apptStartTime.getHour(), apptStartTime.getMinute());
         ZoneId localZone = ZoneId.systemDefault();
-        ZonedDateTime apptStart = ZonedDateTime.of(apptStartDate, apptStartTime, localZone);
-        ZonedDateTime apptStartCheck = apptStart.withZoneSameInstant(ZoneId.of("America/New York"));
+        ZonedDateTime apptStart = ZonedDateTime.of(appt, localZone);
+        ZonedDateTime apptStartCheck = apptStart.withZoneSameInstant(ZoneId.of("America/New_York"));
+        LocalDateTime easternDateTimeStart = apptStartCheck.toLocalDateTime();
+        ZonedDateTime utcDateTimeStart = apptStartCheck.withZoneSameInstant(ZoneId.of("UTC"));
+        LocalDateTime utcDateTimeStartInsert = utcDateTimeStart.toLocalDateTime();
 
-        else {
-            AppointmentDAO.createAppointment(Integer.parseInt(apptIdLbl.getText()), titleTf.getText(), descriptionTf.getText(),
-                    locationTf.getText(), typeTf.getText(), ,endTimeCb ,Integer.parseInt(String.valueOf(custIdCb.getSelectionModel().getSelectedItem())),
+        LocalDate apptEndDate = startDp.getValue();
+        LocalTime apptEndTime = endTimeCb.getSelectionModel().getSelectedItem();
+        LocalDateTime apptEnd = LocalDateTime.of(apptEndDate.getYear(), apptEndDate.getMonth(), apptEndDate.getDayOfMonth(),
+                apptEndTime.getHour(), apptEndTime.getMinute());
+        ZoneId localZoneEnd = ZoneId.systemDefault();
+        ZonedDateTime apptEndZone = ZonedDateTime.of(apptEnd, localZoneEnd);
+        ZonedDateTime apptEndCheck = apptEndZone.withZoneSameInstant(ZoneId.of("America/New_York"));
+        LocalDateTime easternDateTimeEnd = apptEndCheck.toLocalDateTime();
+        ZonedDateTime utcDateTimeEnd = apptEndCheck.withZoneSameInstant(ZoneId.of("UTC"));
+        LocalDateTime utcDateTimeEndInsert = utcDateTimeEnd.toLocalDateTime();
+
+
+        LocalTime easternTimeStart = easternDateTimeStart.toLocalTime();
+        LocalTime easternTimeEnd = easternDateTimeEnd.toLocalTime();
+
+        if((easternTimeStart.isBefore(firstAppt) || easternTimeStart.isAfter(lastAppt)) || (easternTimeEnd.isBefore(earliestFirstApptEnd)
+        || easternTimeEnd.isAfter(businessClose))) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialogue");
+            alert.setContentText("Business hours are 8:00 a.m. - 10 p.m. EST");
+            alert.showAndWait();
+        }
+        Timestamp timestampStart = Timestamp.valueOf(utcDateTimeStartInsert);
+        Timestamp timestampEnd = Timestamp.valueOf(utcDateTimeEndInsert);
+
+        AppointmentDAO.createAppointment(Integer.parseInt(apptIdLbl.getText()), titleTf.getText(), descriptionTf.getText(),
+                    locationTf.getText(), typeTf.getText(), timestampStart, timestampEnd, Integer.parseInt(String.valueOf(custIdCb.getSelectionModel().getSelectedItem())),
                     Integer.parseInt(String.valueOf(userIdCb.getSelectionModel().getSelectedItem())),
-                    Integer.parseInt(String.valueOf(contactCb.getSelectionModel().getSelectedItem())));
-            // (int id, String title, String description, String location, String type, Timestamp start,
-            //                                         Timestamp end, int customerId, int userId, int contactId)
+                    Integer.parseInt(String.valueOf(contactCb.getSelectionModel().getSelectedItem().getId())));
+
             stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
             scene = FXMLLoader.load(getClass().getResource("/View/CustAppts.fxml"));
             stage.setScene(new Scene(scene));
             stage.show();
-        } */
-    }
-
+        }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             apptIdLbl.setText(String.valueOf(AppointmentDAO.getAllAppointments().size() + 1));
+            apptIdLbl.setDisable(true);
             contactCb.setItems(ContactDAO.getAllContacts());
             custIdCb.setItems(CustomerDAO.getAllCustomers());
             userIdCb.setItems(UserDAO.getAllUsers());
@@ -126,16 +159,20 @@ public class AddCustApptController implements Initializable {
             e.printStackTrace();
         }
 
-        LocalTime businessTimeStart = LocalTime.of(0, 30);
+        LocalTime businessTimeStart = LocalTime.of(0, 0);
+        LocalDate localDate = LocalDate.of(2021, 12, 27);
         LocalTime businessTimeEnd = LocalTime.of(23, 30);
-        ZoneId businessLocale = ZoneId.of("America/New_York");
-        //ZonedDateTime easternZdt = ZonedDateTime.of()
+        ZoneId businessLocale = ZoneId.of(String.valueOf(ZoneId.systemDefault()));
+        ZonedDateTime localZdt = ZonedDateTime.of(localDate, businessTimeStart, businessLocale);
+        DateTimeFormatter adjustTimes = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        System.out.println(adjustTimes.format(localZdt));
+
 
         while(businessTimeStart.isBefore(businessTimeEnd)) {
             startTimeCb.getItems().add(businessTimeStart);
             endTimeCb.getItems().add(businessTimeStart);
-            businessTimeStart = businessTimeStart.plusMinutes(30);
-            businessTimeEnd = businessTimeStart.plusMinutes(30);
+            businessTimeStart = businessTimeStart.plusMinutes(15);
+            businessTimeEnd = businessTimeStart.plusMinutes(15);
         }
         startTimeCb.getItems().add(LocalTime.of(23, 30));
         endTimeCb.getItems().add(LocalTime.of(23, 30));

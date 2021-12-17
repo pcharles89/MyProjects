@@ -140,6 +140,7 @@ public class CustApptsController implements Initializable {
     @FXML
     void displayAll(ActionEvent event) {
 
+
     }
 
     @FXML

@@ -108,6 +108,7 @@ public class AddCustomerController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             custIdLbl.setText(String.valueOf(CustomerDAO.getAllCustomers().size()+1));
+            custIdLbl.setDisable(true);
         } catch (SQLException e) {
             e.printStackTrace();
         }

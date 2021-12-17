@@ -8,6 +8,8 @@ import javafx.collections.ObservableList;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.TemporalAccessor;
@@ -16,7 +18,6 @@ public class AppointmentDAO {
     public static ObservableList<Appointment> getAllAppointments() throws SQLException {
         String sqlSelectAllAppointments = "SELECT Appointment_ID, Title, Description, Location, Type, " +
                 "Start, End, Customer_ID, User_ID, Contact_ID FROM client_schedule.appointments";
-        //SimpleDateFormat adjustTimes = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         DateTimeFormatter adjustTimes = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
         JDBC.openConnection();
@@ -35,9 +36,19 @@ public class AppointmentDAO {
             int contactId = rs.getInt("Contact_ID");
 
             LocalDateTime startTime = start.toLocalDateTime();
+            ZoneId databaseZone = ZoneId.of("UTC");
+            ZonedDateTime databaseDateTimeStart = ZonedDateTime.of(startTime, databaseZone);
+            ZoneId usersZone = ZoneId.systemDefault();
+            ZonedDateTime userDateTimeStart = databaseDateTimeStart.withZoneSameInstant(usersZone);
+            LocalDateTime dateTimeTableStart = userDateTimeStart.toLocalDateTime();
+
             LocalDateTime endTime = end.toLocalDateTime();
-            Appointment appointment = new Appointment(apptId, title, description,location, type, adjustTimes.format(startTime),
-                    adjustTimes.format(endTime), customerId, userId, contactId);
+            ZonedDateTime databaseDateTimeEnd = ZonedDateTime.of(endTime, databaseZone);
+            ZonedDateTime userDateTimeEnd = databaseDateTimeEnd.withZoneSameInstant(usersZone);
+            LocalDateTime dateTimeTableEnd = userDateTimeEnd.toLocalDateTime();
+
+            Appointment appointment = new Appointment(apptId, title, description,location, type, adjustTimes.format(dateTimeTableStart),
+                    adjustTimes.format(dateTimeTableEnd), customerId, userId, contactId);
             allAppointments.add(appointment);
         }
         JDBC.closeConnection();
@@ -46,7 +57,7 @@ public class AppointmentDAO {
 
     public static void createAppointment(int id, String title, String description, String location, String type, Timestamp start,
                                          Timestamp end, int customerId, int userId, int contactId) throws SQLException {
-        String insertStatement = "INSERT INTO client_schedule.customers(Appointment_ID, Title, Description, Location," +
+        String insertStatement = "INSERT INTO client_schedule.appointments(Appointment_ID, Title, Description, Location," +
                 "Type, Start, End, Customer_ID, User_ID, Contact_ID) VALUES(?,?,?,?,?,?,?,?,?,?)";
         JDBC.openConnection();
         Query.setPreparedStatement(JDBC.getConnection(), insertStatement);

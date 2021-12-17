@@ -88,7 +88,7 @@ public class MainFormController implements Initializable {
                 ps.setInt(1, custTableView.getSelectionModel().getSelectedItem().getId());
                 ps.executeUpdate();
 
-                Alert alert2 = new Alert(Alert.AlertType.WARNING);
+                Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
                 alert2.setTitle("Warning Dialogue");
                 String customerId = String.valueOf(custTableView.getSelectionModel().getSelectedItem().getId());
                 String customerName = custTableView.getSelectionModel().getSelectedItem().getName();
