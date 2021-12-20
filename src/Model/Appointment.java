@@ -15,6 +15,7 @@ public class Appointment {
     private int customerId;
     private int userId;
     private int contactId;
+    private String contactName;
 
     public Appointment(int id, String title, String description, String location, String type, String start,
                     String end, int customerId, int userId, int contactId) {
@@ -26,9 +27,10 @@ public class Appointment {
         this.type = type;
         this.start = start;
         this.end = end;
-        this.customerId = id;
+        this.customerId = customerId;
         this.userId = userId;
         this.contactId = contactId;
+        this.setContactName(contactId);
     }
 
     public Appointment() {
@@ -113,5 +115,22 @@ public class Appointment {
 
     public void setContactId(int contactId) {
         this.contactId = contactId;
+    }
+
+    public void setContactName(int contactId) {
+        switch(contactId) {
+            case 1:
+                contactName = "Anika Costa";
+                break;
+            case 2:
+                contactName = "Daniel Garcia";
+                break;
+            case 3:
+                contactName = "Li Lee";
+                break;
+        }
+    }
+    public String getContactName() {
+        return contactName;
     }
 }

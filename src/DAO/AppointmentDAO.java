@@ -47,7 +47,7 @@ public class AppointmentDAO {
             ZonedDateTime userDateTimeEnd = databaseDateTimeEnd.withZoneSameInstant(usersZone);
             LocalDateTime dateTimeTableEnd = userDateTimeEnd.toLocalDateTime();
 
-            Appointment appointment = new Appointment(apptId, title, description,location, type, adjustTimes.format(dateTimeTableStart),
+            Appointment appointment = new Appointment(apptId, title, description, location, type, adjustTimes.format(dateTimeTableStart),
                     adjustTimes.format(dateTimeTableEnd), customerId, userId, contactId);
             allAppointments.add(appointment);
         }

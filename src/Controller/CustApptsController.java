@@ -120,7 +120,7 @@ public class CustApptsController implements Initializable {
                 alert2.showAndWait();
 
                 stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-                scene = FXMLLoader.load(getClass().getResource("/View/MainForm.fxml"));
+                scene = FXMLLoader.load(getClass().getResource("/View/CustAppts.fxml"));
                 stage.setScene(new Scene(scene));
                 stage.show();
                 apptTableview.getItems().remove(apptTableview.getSelectionModel().getSelectedItem());
@@ -235,6 +235,6 @@ public class CustApptsController implements Initializable {
         endCol.setCellValueFactory(new PropertyValueFactory<>("end"));
         custIdCol.setCellValueFactory(new PropertyValueFactory<>("customerId"));
         userCol.setCellValueFactory(new PropertyValueFactory<>("userId"));
-        contactCol.setCellValueFactory(new PropertyValueFactory<>("contactId"));
+        contactCol.setCellValueFactory(new PropertyValueFactory<>("contactName"));
     }
 }
