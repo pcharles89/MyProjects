@@ -75,4 +75,32 @@ public class AppointmentDAO {
 
         ps.executeUpdate();
     }
+
+    public static void updateAppointment(int index, Appointment appointment) throws SQLException {
+        Appointment searchedAppointment = AppointmentDAO.lookUpAppointment(index);
+        AppointmentDAO.deleteAppointment(searchedAppointment);
+        Timestamp start = Timestamp.valueOf(appointment.getStart());
+        Timestamp end = Timestamp.valueOf(appointment.getEnd());
+        AppointmentDAO.createAppointment(appointment.getId(), appointment.getTitle(), appointment.getDescription(), appointment.getLocation(),
+                appointment.getType(), start, end, appointment.getCustomerId(), appointment.getUserId(),
+                appointment.getContactId());
+    }
+
+    public static Appointment lookUpAppointment(int appointmentId) throws SQLException {
+        for(Appointment appointment: AppointmentDAO.getAllAppointments()) {
+            if(appointment.getId() == appointmentId) {
+                return appointment;
+            }
+        }
+        return null;
+    }
+
+    public static void deleteAppointment(Appointment appointment) throws SQLException {
+        String deleteStatement = "DELETE FROM client_schedule.appointments WHERE Appointment_ID = ?";
+        JDBC.openConnection();
+        Query.setPreparedStatement(JDBC.getConnection(), deleteStatement);
+        PreparedStatement ps = Query.getPreparedStatement();
+        ps.setInt(1, appointment.getId());
+        ps.executeUpdate();
+    }
 }

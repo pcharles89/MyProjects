@@ -33,6 +33,7 @@ public class AddCustApptController implements Initializable {
     private static final LocalTime lastAppt = LocalTime.of(21,45, 0);
     private static final LocalTime businessClose = LocalTime.of(22, 0, 0);
     private static final LocalTime earliestFirstApptEnd = LocalTime.of(8, 15, 0);
+    private int flag = 0;
 
 
     @FXML
@@ -100,7 +101,8 @@ public class AddCustApptController implements Initializable {
             alert.setTitle("Error Dialogue");
             alert.setContentText("Please enter a valid value for each field.");
             alert.showAndWait();
-        } else {
+        }
+        else {
             LocalDate apptStartDate = startDp.getValue();
             LocalTime apptStartTime = startTimeCb.getSelectionModel().getSelectedItem();
             LocalDateTime appt = LocalDateTime.of(apptStartDate.getYear(), apptStartDate.getMonth(), apptStartDate.getDayOfMonth(),
@@ -126,37 +128,74 @@ public class AddCustApptController implements Initializable {
             LocalTime easternTimeStart = easternDateTimeStart.toLocalTime();
             LocalTime easternTimeEnd = easternDateTimeEnd.toLocalTime();
 
-            if ((easternTimeStart.isBefore(firstAppt) || easternTimeStart.isAfter(lastAppt)) || (easternTimeEnd.isBefore(earliestFirstApptEnd)
+            if (easternTimeStart.isAfter(easternTimeEnd)) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Dialogue");
+                alert.setContentText("Please ensure start time is before end time");
+                alert.showAndWait();
+            }
+            else if ((easternTimeStart.isBefore(firstAppt) || easternTimeStart.isAfter(lastAppt)) || (easternTimeEnd.isBefore(earliestFirstApptEnd)
                     || easternTimeEnd.isAfter(businessClose))) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error Dialogue");
                 alert.setContentText("Business hours are 8 a.m. - 10 p.m. EST");
                 alert.showAndWait();
-            } else if (easternTimeStart.isAfter(easternTimeEnd)) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error Dialogue");
-                alert.setContentText("Please ensure start time is before end time");
-                alert.showAndWait();
-            } else {
+            }
+            else {
                 Timestamp timestampStart = Timestamp.valueOf(utcDateTimeStartInsert);
                 Timestamp timestampEnd = Timestamp.valueOf(utcDateTimeEndInsert);
-                //LocalTime utcStartTime = utcDateTimeStartInsert.toLocalTime();
-                //LocalTime utcEndTime = utcDateTimeEndInsert.toLocalTime();
-                for(Appointment appointment: AppointmentDAO.getAllAppointments()) {
-                    if (Integer.parseInt(String.valueOf(custIdCb.getSelectionModel().getSelectedItem())) == appointment.getCustomerId()) {
 
+                mainLoop: {
+                for (Appointment appointment : AppointmentDAO.getAllAppointments()) {
+                    if (Integer.parseInt(String.valueOf(custIdCb.getSelectionModel().getSelectedItem())) == appointment.getCustomerId()) {
+                        System.out.println("test");
+                        Timestamp dbTimeStart = Timestamp.valueOf(appointment.getStart());
+                        Timestamp dbTimeEnd = Timestamp.valueOf(appointment.getEnd());
+                        System.out.println(dbTimeEnd);
+                        LocalDateTime dbDateTimeStart = dbTimeStart.toLocalDateTime();
+                        LocalDateTime dbDateTimeEnd = dbTimeEnd.toLocalDateTime();
+                        System.out.println(easternDateTimeEnd);
+                        if (((easternDateTimeStart.isAfter(dbDateTimeStart)) || (easternDateTimeStart.isEqual(dbDateTimeStart))) &&
+                                (easternDateTimeStart.isBefore(dbDateTimeEnd))) {
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setTitle("Error Dialogue");
+                            alert.setContentText("Appointment overlap error");
+                            alert.showAndWait();
+                            flag++;
+                            break mainLoop;
+                        }
+                        if (((easternDateTimeEnd.isAfter(dbDateTimeStart)) && (easternDateTimeEnd.isBefore(dbDateTimeEnd))) ||
+                                (easternDateTimeEnd.isEqual(dbDateTimeEnd))) {
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setTitle("Error Dialogue");
+                            alert.setContentText("Appointment overlap error");
+                            alert.showAndWait();
+                            flag++;
+                            break mainLoop;
+                        }
+                        if(((easternDateTimeStart.isBefore(dbDateTimeStart)) || (easternDateTimeStart.equals(dbDateTimeStart))) &&
+                                ((easternDateTimeEnd.isAfter(dbDateTimeEnd)) || (easternDateTimeEnd.isEqual(dbDateTimeEnd)))) {
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setTitle("Error Dialogue");
+                            alert.setContentText("Appointment overlap error");
+                            alert.showAndWait();
+                            flag++;
+                            break mainLoop;
+                        }
                     }
                 }
-
-                AppointmentDAO.createAppointment(Integer.parseInt(apptIdLbl.getText()), titleTf.getText(), descriptionTf.getText(),
-                        locationTf.getText(), typeTf.getText(), timestampStart, timestampEnd, Integer.parseInt(String.valueOf(custIdCb.getSelectionModel().getSelectedItem())),
-                        Integer.parseInt(String.valueOf(userIdCb.getSelectionModel().getSelectedItem())),
-                        Integer.parseInt(String.valueOf(contactCb.getSelectionModel().getSelectedItem().getId())));
-
-                stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-                scene = FXMLLoader.load(getClass().getResource("/View/CustAppts.fxml"));
-                stage.setScene(new Scene(scene));
-                stage.show();
+                }
+                if(flag == 0) {
+                    AppointmentDAO.createAppointment(Integer.parseInt(apptIdLbl.getText()), titleTf.getText(), descriptionTf.getText(),
+                            locationTf.getText(), typeTf.getText(), timestampStart, timestampEnd, Integer.parseInt(String.valueOf(custIdCb.getSelectionModel().getSelectedItem())),
+                            Integer.parseInt(String.valueOf(userIdCb.getSelectionModel().getSelectedItem())),
+                            Integer.parseInt(String.valueOf(contactCb.getSelectionModel().getSelectedItem().getId())));
+                    System.out.println("inner loop");
+                    stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+                    scene = FXMLLoader.load(getClass().getResource("/View/CustAppts.fxml"));
+                    stage.setScene(new Scene(scene));
+                    stage.show();
+                }
             }
         }
     }

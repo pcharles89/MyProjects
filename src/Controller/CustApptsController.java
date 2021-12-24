@@ -162,8 +162,24 @@ public class CustApptsController implements Initializable {
     }
 
     @FXML
-    void displayUpdateForm(ActionEvent event) {
-
+    void displayUpdateForm(ActionEvent event) throws IOException, SQLException {
+        if(!(apptTableview.getSelectionModel().getSelectedItems().isEmpty())) {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/View/UpdateCustomer.fxml"));
+            loader.load();
+            UpdateCustApptController updateAppointment = loader.getController();
+            updateAppointment.receiveAppointment(apptTableview.getSelectionModel().getSelectedItem());
+            stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+            Parent scene = loader.getRoot();
+            stage.setScene(new Scene(scene));
+            stage.show();
+        }
+        else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialogue");
+            alert.setContentText("No items are selected.");
+            alert.showAndWait();
+        }
     }
 
     @FXML
