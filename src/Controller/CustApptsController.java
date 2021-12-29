@@ -6,6 +6,7 @@ import DAO.JDBC;
 import DAO.Query;
 import Model.Appointment;
 import Model.Customer;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -139,13 +140,20 @@ public class CustApptsController implements Initializable {
 
     @FXML
     void displayAll(ActionEvent event) {
-
-
+        try {
+            apptTableview.setItems(AppointmentDAO.getAllAppointments());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
     void displayByMonth(ActionEvent event) {
-
+        try {
+            apptTableview.setItems(AppointmentDAO.getFilteredAppointmentsMonth());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -165,7 +173,7 @@ public class CustApptsController implements Initializable {
     void displayUpdateForm(ActionEvent event) throws IOException, SQLException {
         if(!(apptTableview.getSelectionModel().getSelectedItems().isEmpty())) {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/View/UpdateCustomer.fxml"));
+            loader.setLocation(getClass().getResource("/View/UpdateCustAppt.fxml"));
             loader.load();
             UpdateCustApptController updateAppointment = loader.getController();
             updateAppointment.receiveAppointment(apptTableview.getSelectionModel().getSelectedItem());

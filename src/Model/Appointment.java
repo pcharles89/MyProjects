@@ -16,6 +16,7 @@ public class Appointment {
     private int userId;
     private int contactId;
     private String contactName;
+    private int contactIndex;
 
     public Appointment(int id, String title, String description, String location, String type, String start,
                     String end, int customerId, int userId, int contactId) {
@@ -133,4 +134,16 @@ public class Appointment {
     public String getContactName() {
         return contactName;
     }
+    public int getContactIndex() {
+        if(contactName == "Anika Costa") {
+            return 0;
+        }
+        else if(contactName == "Daniel Garcia") {
+            return 1;
+        }
+        else {
+            return 2;
+        }
+    }
+
 }

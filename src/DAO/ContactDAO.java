@@ -2,6 +2,7 @@ package DAO;
 
 import Model.Contact;
 import Model.Customer;
+import Model.FLDivision;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
