@@ -1,8 +1,10 @@
 package Controller;
 
+import DAO.AppointmentDAO;
 import DAO.CustomerDAO;
 import DAO.JDBC;
 import DAO.Query;
+import Model.Appointment;
 import Model.Customer;
 import Model.FLDivision;
 import javafx.collections.FXCollections;
@@ -24,12 +26,19 @@ import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class MainFormController implements Initializable {
     private Stage stage;
     private Parent scene;
+    int flag = 0;
 
     @FXML
     private TableView<Customer> custTableView;
@@ -201,6 +210,37 @@ public class MainFormController implements Initializable {
         custPostalCodeCol.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
         custPhoneCol.setCellValueFactory(new PropertyValueFactory<>("phone"));
         custDivisionIdCol.setCellValueFactory(new PropertyValueFactory<>("divisionId"));
+
+
+        LocalDateTime now = LocalDateTime.now();
+        try {
+           ObservableList<Appointment> appointments = AppointmentDAO.getAllAppointments();
+           for(Appointment appointment : appointments) {
+                Timestamp appointmentTs = Timestamp.valueOf(appointment.getStart());
+                LocalDateTime appointmentLdt = appointmentTs.toLocalDateTime();
+                DateTimeFormatter adjustTimes = DateTimeFormatter.ofPattern("HH:mm");
+                LocalDate nowDate = appointmentLdt.toLocalDate();
+                String formatter = adjustTimes.format(appointmentLdt);
+                long timeDifference = ChronoUnit.MINUTES.between(now, appointmentLdt);
+                System.out.println(timeDifference);
+                if(timeDifference >= 0 && timeDifference <= 15) {
+                    ++flag;
+                    Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+                    alert2.setTitle("Alert");
+                    alert2.setContentText("Appointment [" + appointment.getId() + "] is at " + nowDate + " at " + formatter);
+                    alert2.showAndWait();
+                    break;
+                }
+           }
+           if(flag == 0) {
+               Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+               alert2.setTitle("Alert");
+               alert2.setContentText("There are no upcoming appointments");
+               alert2.showAndWait();
+           }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }

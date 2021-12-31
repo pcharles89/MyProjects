@@ -158,7 +158,11 @@ public class CustApptsController implements Initializable {
 
     @FXML
     void displayByWeek(ActionEvent event) {
-
+        try {
+            apptTableview.setItems(AppointmentDAO.getFilteredAppointmentsWeek());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML

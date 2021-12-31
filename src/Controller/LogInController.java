@@ -1,6 +1,9 @@
 package Controller;
 
+import DAO.AppointmentDAO;
 import DAO.JDBC;
+import Model.Appointment;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,7 +17,13 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -54,22 +63,58 @@ public class LogInController implements Initializable {
 
     @FXML
     void clickEnterButton(ActionEvent event) throws IOException {
-        if(((usernameTextField.getText().equals("test")) && (passwordTextField.getText().equals("test"))) ||
+        int flag = 0;
+        if (((usernameTextField.getText().equals("test")) && (passwordTextField.getText().equals("test"))) ||
                 ((usernameTextField.getText().equals("admin")) && (passwordTextField.getText().equals("admin")))) {
             JDBC.openConnection();
-            stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-            scene = FXMLLoader.load(getClass().getResource("/View/MainForm.fxml"));
-            stage.setScene(new Scene(scene));
-            stage.show();
+            LocalDateTime now = LocalDateTime.now();
+            try {
+                ObservableList<Appointment> appointments = AppointmentDAO.getAllAppointments();
+                for (Appointment appointment : appointments) {
+                    Timestamp appointmentTs = Timestamp.valueOf(appointment.getStart());
+                    LocalDateTime appointmentLdt = appointmentTs.toLocalDateTime();
+                    DateTimeFormatter adjustTimes = DateTimeFormatter.ofPattern("HH:mm");
+                    LocalDate nowDate = appointmentLdt.toLocalDate();
+                    String formatter = adjustTimes.format(appointmentLdt);
+                    long timeDifference = ChronoUnit.MINUTES.between(now, appointmentLdt);
+                    System.out.println(timeDifference);
+                    if (timeDifference >= 0 && timeDifference <= 15) {
+                        if ((Locale.getDefault().getLanguage().equals("en"))) {
+                            ++flag;
+                            Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+                            alert2.setTitle("Alert");
+                            alert2.setContentText("Appointment [" + appointment.getId() + "] is at " + nowDate + " at " + formatter);
+                            alert2.showAndWait();
+                            break;
+                        }
+                        else {
+                            ++flag;
+                            Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+                            alert2.setTitle(rb.getString("alert"));
+                            alert2.setContentText("Le rendez-vous [" + appointment.getId() + "] est à " + nowDate + " à " + formatter);
+                            alert2.showAndWait();
+                            break;
+                        }
+                    }
+                }
+                if (flag == 0) {
+                    Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+                    alert2.setTitle("Alert");
+                    alert2.setContentText("There are no upcoming appointments");
+                    alert2.showAndWait();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
+
         else {
-            if((Locale.getDefault().getLanguage().equals("en"))) {
+            if ((Locale.getDefault().getLanguage().equals("en"))) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setContentText("Invalid username/password, please try again.");
                 alert.showAndWait();
-            }
-            else {
+            } else {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle(rb.getString("error"));
                 alert.setContentText("nom d'utilisateur/mot de passe invalide, veuillez réessayer");
@@ -77,6 +122,10 @@ public class LogInController implements Initializable {
             }
         }
 
+        stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        scene = FXMLLoader.load(getClass().getResource("/View/MainForm.fxml"));
+        stage.setScene(new Scene(scene));
+        stage.show();
     }
 
     @FXML
@@ -100,7 +149,8 @@ public class LogInController implements Initializable {
     @FXML
     void onEnterKeyPressedPw(KeyEvent event) throws IOException {
         if (event.getCode().equals(KeyCode.ENTER)) {
-            if ((usernameTextField.getText().equals("test")) && (passwordTextField.getText().equals("test"))) {
+            if(((usernameTextField.getText().equals("test")) && (passwordTextField.getText().equals("test"))) ||
+                    ((usernameTextField.getText().equals("admin")) && (passwordTextField.getText().equals("admin")))) {
                 JDBC.openConnection();
                 stage = (Stage) ((TextField) event.getSource()).getScene().getWindow();
                 scene = FXMLLoader.load(getClass().getResource("/View/MainForm.fxml"));
@@ -128,7 +178,8 @@ public class LogInController implements Initializable {
     @FXML
     void onEnterKeyPressedUser(KeyEvent event) throws IOException {
         if (event.getCode().equals(KeyCode.ENTER)) {
-            if ((usernameTextField.getText().equals("test")) && (passwordTextField.getText().equals("test"))) {
+            if(((usernameTextField.getText().equals("test")) && (passwordTextField.getText().equals("test"))) ||
+                    ((usernameTextField.getText().equals("admin")) && (passwordTextField.getText().equals("admin")))) {
                 JDBC.openConnection();
                 stage = (Stage) ((TextField) event.getSource()).getScene().getWindow();
                 scene = FXMLLoader.load(getClass().getResource("/View/MainForm.fxml"));
