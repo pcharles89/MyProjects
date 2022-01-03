@@ -211,36 +211,6 @@ public class MainFormController implements Initializable {
         custPhoneCol.setCellValueFactory(new PropertyValueFactory<>("phone"));
         custDivisionIdCol.setCellValueFactory(new PropertyValueFactory<>("divisionId"));
 
-
-        LocalDateTime now = LocalDateTime.now();
-        try {
-           ObservableList<Appointment> appointments = AppointmentDAO.getAllAppointments();
-           for(Appointment appointment : appointments) {
-                Timestamp appointmentTs = Timestamp.valueOf(appointment.getStart());
-                LocalDateTime appointmentLdt = appointmentTs.toLocalDateTime();
-                DateTimeFormatter adjustTimes = DateTimeFormatter.ofPattern("HH:mm");
-                LocalDate nowDate = appointmentLdt.toLocalDate();
-                String formatter = adjustTimes.format(appointmentLdt);
-                long timeDifference = ChronoUnit.MINUTES.between(now, appointmentLdt);
-                System.out.println(timeDifference);
-                if(timeDifference >= 0 && timeDifference <= 15) {
-                    ++flag;
-                    Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
-                    alert2.setTitle("Alert");
-                    alert2.setContentText("Appointment [" + appointment.getId() + "] is at " + nowDate + " at " + formatter);
-                    alert2.showAndWait();
-                    break;
-                }
-           }
-           if(flag == 0) {
-               Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
-               alert2.setTitle("Alert");
-               alert2.setContentText("There are no upcoming appointments");
-               alert2.showAndWait();
-           }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
 }
