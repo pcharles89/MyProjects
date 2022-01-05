@@ -20,12 +20,16 @@
             <TableColumn fx:id="custDivisionIdCol" minWidth="50.0" prefWidth="75.0" text="Division_ID" />
         </columns>
       </TableView>
-      <HBox alignment="TOP_CENTER" layoutX="125.0" layoutY="469.0" prefHeight="100.0" prefWidth="500.0" spacing="45.0">
+      <HBox alignment="TOP_CENTER" layoutX="30.0" layoutY="469.0" prefHeight="100.0" prefWidth="690.0" spacing="50.0">
          <children>
             <Button fx:id="addBtn" mnemonicParsing="false" onAction="#addCustomer" text="Add" />
             <Button fx:id="updateBtn" mnemonicParsing="false" onAction="#updateCustomer" text="Update" />
             <Button fx:id="deleteBtn" mnemonicParsing="false" onAction="#deleteCustomer" text="Delete" />
             <Button fx:id="viewApptBtn" mnemonicParsing="false" onAction="#viewAppts" text="View All Appointments" />
+            <Button mnemonicParsing="false" onAction="#exitApplication" prefHeight="26.0" prefWidth="79.0" text="Exit">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin></Button>
          </children>
          <padding>
             <Insets top="20.0" />
