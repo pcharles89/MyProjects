@@ -3,9 +3,7 @@ package Controller;
 import DAO.AppointmentDAO;
 import DAO.ContactDAO;
 import DAO.UserDAO;
-import Model.Appointment;
-import Model.Contact;
-import Model.User;
+import Model.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -25,9 +23,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -37,10 +34,10 @@ public class ReportsController implements Initializable {
     private Parent scene;
 
     @FXML
-    private ComboBox<?> monthCb;
+    private ComboBox<MonthCb> monthCb;
 
     @FXML
-    private ComboBox<String> typeCb;
+    private ComboBox<TypeCb> typeCb;
 
     @FXML
     private Label report1Lbl;
@@ -107,13 +104,38 @@ public class ReportsController implements Initializable {
     }
 
     @FXML
-    void selectMonth(ActionEvent event) {
-
+    void selectMonth(ActionEvent event) throws SQLException {
+        int counter = 0;
+        if(typeCb.getSelectionModel().getSelectedItem() != null) {
+            for(Appointment appointment : AppointmentDAO.getAllAppointments()) {
+                Timestamp startTs = Timestamp.valueOf(appointment.getStart());
+                LocalDateTime startLdt = startTs.toLocalDateTime();
+                String startMonth = startLdt.getMonth().toString();
+                if((appointment.getType().equalsIgnoreCase(typeCb.getSelectionModel().getSelectedItem().toString()) &&
+                        (startMonth.equalsIgnoreCase(monthCb.getSelectionModel().getSelectedItem().toString())))) {
+                    ++counter;
+                }
+            }
+            report1Lbl.setText(String.valueOf(counter));
+        }
     }
 
-    @FXML
-    void selectType(ActionEvent event) {
 
+    @FXML
+    void selectType(ActionEvent event) throws SQLException {
+        int counter = 0;
+        if(monthCb.getSelectionModel().getSelectedItem() != null) {
+            for(Appointment appointment : AppointmentDAO.getAllAppointments()) {
+                Timestamp startTs = Timestamp.valueOf(appointment.getStart());
+                LocalDateTime startLdt = startTs.toLocalDateTime();
+                String startMonth = startLdt.getMonth().toString();
+                if((appointment.getType().equalsIgnoreCase(typeCb.getSelectionModel().getSelectedItem().toString()) &&
+                        (startMonth.equalsIgnoreCase(monthCb.getSelectionModel().getSelectedItem().toString())))) {
+                    ++counter;
+                }
+            }
+            report1Lbl.setText(String.valueOf(counter));
+        }
     }
 
     @FXML
@@ -140,13 +162,19 @@ public class ReportsController implements Initializable {
         userCol.setCellValueFactory(new PropertyValueFactory<>("userId"));
         contactCol.setCellValueFactory(new PropertyValueFactory<>("contactName"));
         try {
-            ObservableList<String> types = FXCollections.observableArrayList();
+            ObservableList<TypeCb> types = FXCollections.observableArrayList();
             contactCb.setItems(ContactDAO.getAllContacts());
             userCb.setItems(UserDAO.getAllUsers());
             for(Appointment appointment: AppointmentDAO.getAllAppointments()) {
-                types.add(appointment.getType());
+                types.add(new TypeCb(appointment.getType()));
             }
             typeCb.setItems(types);
+            ObservableList<MonthCb> months = FXCollections.observableArrayList();
+            months.addAll(new MonthCb("January"), new MonthCb("February"), new MonthCb("March"),
+                    new MonthCb("April"), new MonthCb("May"), new MonthCb("June"), new MonthCb("July"),
+                    new MonthCb("August"), new MonthCb("September"), new MonthCb("October"),
+                    new MonthCb("November"), new MonthCb("December"));
+            monthCb.setItems(months);
 
         } catch (SQLException e) {
             e.printStackTrace();

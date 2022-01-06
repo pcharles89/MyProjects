@@ -2,6 +2,8 @@ package Main;
 
 import DAO.JDBC;
 import DAO.Query;
+import Model.MonthCb;
+import Model.TypeCb;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -40,6 +42,7 @@ public class Main extends Application {
         if(Locale.getDefault().getLanguage().equals("fr")) {
             System.out.println(rb.getString("username") + " " + rb.getString("password"));
         }
+        //System.out.println(System.getProperties().get("javafx.runtime.version"));
         launch(args);
         JDBC.closeConnection();
     }
