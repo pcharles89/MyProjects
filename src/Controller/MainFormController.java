@@ -9,6 +9,7 @@ import Model.Customer;
 import Model.FLDivision;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -80,9 +81,7 @@ public class MainFormController implements Initializable {
     void exitApplication(ActionEvent event) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "This will exit the application, are you sure?");
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            System.exit(0);
-        }
+        result.ifPresent(x -> System.exit(0));
     }
 
     @FXML

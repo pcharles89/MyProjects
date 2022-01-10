@@ -3,8 +3,6 @@ package Controller;
 import DAO.*;
 import Model.Country;
 import Model.FLDivision;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,18 +14,14 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+/** This class handles adding customers. Brings a user to the add customer screen to enter new customer info.*/
 public class AddCustomerController implements Initializable {
     private Stage stage;
     private Parent scene;
-    private static String country;
-    private static ObservableList<Country> countries = FXCollections.observableArrayList();
-    private static ObservableList<FLDivision> divisions = FXCollections.observableArrayList();
 
     @FXML
     private Label custIdLbl;
@@ -50,13 +44,9 @@ public class AddCustomerController implements Initializable {
     @FXML
     private ComboBox<FLDivision> custDivisionCB;
 
-    @FXML
-    private Button saveBtn;
-
-    @FXML
-    private Button cancelBtn;
-
-
+    /** Displays all customers. Brings a user back to the main form screen.
+     * @param event occurs when a user clicks the back button
+     */
     @FXML
     void backToMainMenu(ActionEvent event) throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "This will clear any unsaved work, continue?");
@@ -70,6 +60,9 @@ public class AddCustomerController implements Initializable {
 
     }
 
+    /** Selects a country. Populates division combo box with the appropriate selection based on the country chosen.
+     * @param event occurs when a user makes a selection from the country combo box
+     */
     @FXML
     void selectCountry(ActionEvent event) throws SQLException {
         String country = custCountryCB.getSelectionModel().getSelectedItem().toString();
@@ -77,11 +70,9 @@ public class AddCustomerController implements Initializable {
 
     }
 
-    @FXML
-    void selectDivision(ActionEvent event) throws SQLException {
-
-    }
-
+    /** Saves a customer. Brings a user back to the main screen after saving it
+     * @param event occurs when a user clicks the save button
+     */
     @FXML
     void saveCustomer(ActionEvent event) throws SQLException, IOException {
             if(((custNameTf.getText().equals("")) || (custAddressTf.getText().equals("")) || (custPostalCodeTf.getText().equals(""))
@@ -104,6 +95,7 @@ public class AddCustomerController implements Initializable {
 
     }
 
+    /** First method called in class. Disables id text field and populates combo boxes.*/
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {

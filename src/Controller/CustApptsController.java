@@ -29,6 +29,8 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+/** This class deals with the customer appointments screen. This is what the user sees when they click the view appointments
+ * button on the main form.*/
 public class CustApptsController implements Initializable {
 
     private Stage stage;
@@ -100,6 +102,9 @@ public class CustApptsController implements Initializable {
     @FXML
     private Button reportsBtn;
 
+    /** Deletes an appointment. Removes the appointment from the tableview
+     * @param event occurs when a user clicks the delete button
+     */
     @FXML
     void deleteAppt(ActionEvent event) throws SQLException, IOException {
         if(!(apptTableview.getItems().isEmpty()) && (apptTableview.getSelectionModel().getSelectedItem() != null)) {
@@ -130,6 +135,9 @@ public class CustApptsController implements Initializable {
         }
     }
 
+    /** Used to add an appointment. Brings user to the add appointment screen to create a new appointment for that customer
+     * @param event occurs when a user clicks the add button
+     */
     @FXML
     void displayAddForm(ActionEvent event) throws IOException {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
@@ -138,6 +146,9 @@ public class CustApptsController implements Initializable {
         stage.show();
     }
 
+    /** Used to view all appointments. Filters the tableview accordingly
+     * @param event occurs when a user clicks the all button
+     */
     @FXML
     void displayAll(ActionEvent event) {
         try {
@@ -147,6 +158,9 @@ public class CustApptsController implements Initializable {
         }
     }
 
+    /** Used to view all appointments this month. Filters the tableview accordingly
+     * @param event occurs when a user clicks the month button
+     */
     @FXML
     void displayByMonth(ActionEvent event) {
         try {
@@ -156,6 +170,9 @@ public class CustApptsController implements Initializable {
         }
     }
 
+    /** Used to view all appointments for the next week. Filters the tableview accordingly
+     * @param event occurs when a user clicks the week button
+     */
     @FXML
     void displayByWeek(ActionEvent event) {
         try {
@@ -165,6 +182,9 @@ public class CustApptsController implements Initializable {
         }
     }
 
+    /** Displays all customers. Brings a user back to the main form screen.
+     * @param event occurs when a user clicks the back button
+     */
     @FXML
     void displayMainMenu(ActionEvent event) throws IOException {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
@@ -173,6 +193,9 @@ public class CustApptsController implements Initializable {
         stage.show();
     }
 
+    /** Used to update an existing appointment. Brings user to the update appointment screen to edit the appointment information
+     * @param event occurs when a user clicks the update button
+     */
     @FXML
     void displayUpdateForm(ActionEvent event) throws IOException, SQLException {
         if(!(apptTableview.getSelectionModel().getSelectedItems().isEmpty())) {
@@ -194,6 +217,9 @@ public class CustApptsController implements Initializable {
         }
     }
 
+    /** Used to search for an appointment. The appointment tableview is searched to see if an appointment exists
+     * @param event occurs when a user hits the enter/return button on their keyboard
+     */
     @FXML
     void onEnterAppt(KeyEvent event) {
         if (event.getCode().equals(KeyCode.ENTER)) {
@@ -219,6 +245,9 @@ public class CustApptsController implements Initializable {
         }
     }
 
+    /** Used to search for an appointment. The appointment tableview is searched to see if an appointment exists
+     * @param event occurs when a user clicks the search button
+     */
     @FXML
     void searchForAppt(ActionEvent event) {
         apptTableview.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -241,6 +270,9 @@ public class CustApptsController implements Initializable {
         }
     }
 
+    /** Allows a user to view reports. Brings a user to the Reports screen to fill in information to generate reports
+     * @param event occurs when a user clicks the reports button
+     */
     @FXML
     void viewReports(ActionEvent event) throws IOException {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
@@ -249,7 +281,7 @@ public class CustApptsController implements Initializable {
         stage.show();
     }
 
-
+    /** First method called in class. Populates appointment tableview.*/
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {

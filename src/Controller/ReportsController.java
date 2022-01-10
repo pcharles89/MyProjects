@@ -25,8 +25,10 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.stream.Stream;
 
 public class ReportsController implements Initializable {
 
@@ -140,13 +142,17 @@ public class ReportsController implements Initializable {
 
     @FXML
     void selectUser(ActionEvent event) throws SQLException {
-        int count = 0;
+        /* int count = 0;
         for(Appointment appointment : AppointmentDAO.getAllAppointments()) {
             if(appointment.getUserId() == userCb.getSelectionModel().getSelectedItem().getId()) {
                 ++count;
             }
         }
-        report2Lbl.setText(String.valueOf(count));
+        report2Lbl.setText(String.valueOf(count)); */
+        int counter = AppointmentDAO.getAllAppointments().stream().filter(w -> w.getUserId() ==
+                userCb.getSelectionModel().getSelectedItem().getId())
+                .mapToInt(Appointment::getUserId).sum();
+        report2Lbl.setText(String.valueOf(counter));
     }
 
     @Override

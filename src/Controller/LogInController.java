@@ -32,7 +32,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
 
-/** This class allows users to log in to the application.*/
+/** This class allows users to log in to the application. Logging in by filling in credentials.*/
 public class LogInController implements Initializable {
 
     ResourceBundle rb = ResourceBundle.getBundle("Utilities/Nat_fr", Locale.getDefault());
@@ -63,7 +63,9 @@ public class LogInController implements Initializable {
     @FXML
     private Label loginLbl;
 
-
+    /** Allows user to login to the application. Brings user to the main form after logging in
+     * @param event occurs when a user clicks the enter button
+     */
     @FXML
     void clickEnterButton(ActionEvent event) throws IOException {
         int flag = 0;
@@ -71,8 +73,6 @@ public class LogInController implements Initializable {
                 ((usernameTextField.getText().equals("admin")) && (passwordTextField.getText().equals("admin")))) {
             JDBC.openConnection();
 
-            // User Davis successfully logged in at 2020-07-21 16:00:00-UTC
-            // User test gave invalid login at 2020-07-23 14:00:00-UTC
             LocalDateTime now = LocalDateTime.now();
             ZoneId zoneUtc = ZoneId.of("UTC");
             ZoneId usersZone = ZoneId.systemDefault();

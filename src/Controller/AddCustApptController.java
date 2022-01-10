@@ -5,8 +5,7 @@ import Model.Appointment;
 import Model.Contact;
 import Model.Customer;
 import Model.User;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,17 +14,16 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.*;
-import java.time.chrono.ChronoZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+/** This class handles adding customer appointments for a specific customer Id. Brings a user to the add customer appointment screen. */
 public class AddCustApptController implements Initializable {
     private Stage stage;
     private Parent scene;
@@ -69,15 +67,10 @@ public class AddCustApptController implements Initializable {
     @FXML
     private ComboBox<User> userIdCb;
 
-    @FXML
-    private Button saveApptRbtn;
 
-    @FXML
-    private Button cancelApptRbtn;
-
-    @FXML
-    private Label addApptLbl;
-
+    /** Displays all customer appointments. Brings a user back to the Customer Appointments screen.
+     * @param event occurs when a user clicks the back button
+     */
     @FXML
     void backToViewAppts(ActionEvent event) throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "This will clear any unsaved work, continue?");
@@ -90,6 +83,9 @@ public class AddCustApptController implements Initializable {
         }
     }
 
+    /** Saves an appointment. Brings a user back to the Customer Appointments screen after saving it
+     * @param event occurs when a user clicks the save button
+     */
     @FXML
     void saveApptAction(ActionEvent event) throws IOException, SQLException {
         if (((titleTf.getText().equals("")) || (descriptionTf.getText().equals("")) || (locationTf.getText().equals(""))
@@ -200,6 +196,7 @@ public class AddCustApptController implements Initializable {
         }
     }
 
+    /** First method called in class. Disables id text field and populates combo boxes.*/
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {

@@ -3,6 +3,7 @@ package Model;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class Appointment {
     private int id;
@@ -131,14 +132,15 @@ public class Appointment {
                 break;
         }
     }
+
     public String getContactName() {
         return contactName;
     }
     public int getContactIndex() {
-        if(contactName == "Anika Costa") {
+        if(Objects.equals(contactName, "Anika Costa")) {
             return 0;
         }
-        else if(contactName == "Daniel Garcia") {
+        else if(Objects.equals(contactName, "Daniel Garcia")) {
             return 1;
         }
         else {

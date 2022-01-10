@@ -80,8 +80,8 @@
                   <TextField fx:id="custPostalCodeTf" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                   <TextField fx:id="custPhoneTf" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                   <TextField fx:id="custAddressTf" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <ComboBox fx:id="custCountryCB" onAction="#selectCountry" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <ComboBox fx:id="custDivisionCB" onAction="#selectDivision" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <ComboBox fx:id="custCountryCB" onAction="#selectCountry" prefHeight="26.0" prefWidth="161.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <ComboBox fx:id="custDivisionCB" prefHeight="26.0" prefWidth="202.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                </children>
             </GridPane>
          </children>
