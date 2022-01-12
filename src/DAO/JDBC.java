@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/** This class makes it possible to access the database. Allows the user to establish a connection or close a connection.*/
 public abstract class JDBC {
     private static final String protocol = "jdbc";
     private static final String vendor = ":mysql:";
@@ -15,10 +16,14 @@ public abstract class JDBC {
     private static String password = "Passw0rd!"; // Password
     public static Connection connection;  // Connection Interface
 
+    /**
+     * @return a connection
+     */
     public static Connection getConnection() {
         return connection;
     }
 
+    /** Accesses the database. Allows a user to open a connection to the database.*/
     public static void openConnection()
     {
         try {
@@ -32,6 +37,7 @@ public abstract class JDBC {
         }
     }
 
+    /** Closes a users connection to the database.*/
     public static void closeConnection() {
         try {
             connection.close();

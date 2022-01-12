@@ -7,7 +7,11 @@ import javafx.collections.ObservableList;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/** This class deals with accessing user information from the database. Queries the users table in the database and retrieves the
+ * results.*/
 public class UserDAO {
+
+    /** Retrieves users from the database. Queries the users table in the database and retrieves all users.*/
     public static ObservableList<User> getAllUsers() throws SQLException {
         String sqlSelectAllUsers = "SELECT User_ID, User_Name, Password FROM client_schedule.users";
         ObservableList<User> allUsers = FXCollections.observableArrayList();

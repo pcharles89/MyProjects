@@ -167,6 +167,9 @@ public class LogInController implements Initializable {
         }
     }
 
+    /** Used to exit the application.
+     * @param event occurs when a user clicks the exit button
+     */
     @FXML
     void exitApplication(ActionEvent event) {
         if (Locale.getDefault().getLanguage().equals("en")) {
@@ -185,6 +188,9 @@ public class LogInController implements Initializable {
         }
     }
 
+    /** Allows user to login to the application. Brings user to the main form after logging in
+     * @param event occurs when a user clicks the enter button on their keyboard in the password text field
+     */
     @FXML
     void onEnterKeyPressedPw(KeyEvent event) throws IOException {
         if (event.getCode().equals(KeyCode.ENTER)) {
@@ -284,6 +290,9 @@ public class LogInController implements Initializable {
         }
     }
 
+    /** Allows user to login to the application. Brings user to the main form after logging in
+     * @param event occurs when a user clicks the enter button on their keyboard in the username text field
+     */
     @FXML
     void onEnterKeyPressedUser(KeyEvent event) throws IOException {
         if (event.getCode().equals(KeyCode.ENTER)) {
@@ -384,6 +393,7 @@ public class LogInController implements Initializable {
         }
     }
 
+    /** First method called in class. Displays users zone and checks language to display text accordingly.*/
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         zoneIdLbl.setText(String.valueOf(ZoneId.systemDefault()));

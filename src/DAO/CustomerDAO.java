@@ -8,8 +8,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/** This class deals with accessing customer information from the database. Queries the customers table in the database and retrieves
+ * the results.*/
 public class CustomerDAO {
 
+    /** Retrieves customers from the database. Queries the customers table in the database and retrieves all customers.*/
     public static ObservableList<Customer> getAllCustomers() throws SQLException {
         String sqlSelectAllCustomers = "SELECT Customer_ID, Customer_Name, Address, Postal_Code, Phone, " +
                 "Division_Id FROM client_schedule.customers";
@@ -31,6 +34,8 @@ public class CustomerDAO {
         return allCustomers;
     }
 
+    /** Creates a new customer in the database. Inserts the new customer into the customers table in the database using
+     * the arguments provided (which correspond to the tables fields).*/
     public static void createCustomer(int custId, String custName, String address, String pCode, String phone, int divId)
             throws SQLException {
         String insertStatement = "INSERT INTO client_schedule.customers(Customer_ID, Customer_Name, Address, Postal_Code," +
@@ -48,6 +53,10 @@ public class CustomerDAO {
         ps.executeUpdate();
     }
 
+    /** Updates a customer in the database.
+     * @param index the customer id of the appointment being updated
+     * @param customer the new customer after changes have been made
+     */
     public static void updateCustomer(int index, Customer customer) throws SQLException {
         Customer searchedCustomer = CustomerDAO.lookUpCustomer(index);
         CustomerDAO.deleteCustomer(searchedCustomer);
@@ -55,6 +64,10 @@ public class CustomerDAO {
                 customer.getPhone(), customer.getDivisionId());
     }
 
+    /** Looks up the customer by id. Used in conjunction with the updateCustomer method to update a customer.
+     * @param customerID the customer id of the appointment that is to be updated
+     * @return returns the customer that is going to be updated
+     */
     public static Customer lookUpCustomer(int customerID) throws SQLException {
         for(Customer customer: CustomerDAO.getAllCustomers()) {
             if(customer.getId() == customerID) {
@@ -64,6 +77,9 @@ public class CustomerDAO {
         return null;
     }
 
+    /** Deletes a customer from the database. Queries the customers table in the database and then deletes the customer from it.
+     * @param customer the customer to be deleted
+     */
     public static void deleteCustomer(Customer customer) throws SQLException {
         String deleteStatement = "DELETE FROM client_schedule.customers WHERE Customer_ID = ?";
         JDBC.openConnection();

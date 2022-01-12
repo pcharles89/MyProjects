@@ -36,6 +36,7 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+/** This class deals with the main form screen. This is what the user sees when they first log in to the application.*/
 public class MainFormController implements Initializable {
     private Stage stage;
     private Parent scene;
@@ -77,6 +78,10 @@ public class MainFormController implements Initializable {
     @FXML
     private TextField searchBarTf;
 
+    /** -LAMBDA-Used to exit the application. The lambda expression makes the code more concise as it avoids using a conditional
+     * statement to exit the application
+     * @param event occurs when a user clicks the exit button
+     */
     @FXML
     void exitApplication(ActionEvent event) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "This will exit the application, are you sure?");
@@ -84,6 +89,9 @@ public class MainFormController implements Initializable {
         result.ifPresent(x -> System.exit(0));
     }
 
+    /** Used to add a new customer. Brings the user to the add customer form.
+     * @param event occurs when a user clicks the add button
+     */
     @FXML
     void addCustomer(ActionEvent event) throws IOException {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
@@ -92,6 +100,9 @@ public class MainFormController implements Initializable {
         stage.show();
     }
 
+    /** Used to delete a customer from the database. Removes the customer from the tableview.
+     * @param event occurs when a user clicks the delete button
+     */
     @FXML
     void deleteCustomer(ActionEvent event) throws SQLException, IOException {
         if(!(custTableView.getItems().isEmpty()) && (custTableView.getSelectionModel().getSelectedItem() != null)) {
@@ -128,6 +139,10 @@ public class MainFormController implements Initializable {
         }
 
     }
+
+    /** Used to search for a customer. The customer tableview is searched to see if a customer exists
+     * @param event occurs when a user hits the enter button on their keyboard
+     */
     @FXML
     void onEnterCustomer(KeyEvent event) {
         if (event.getCode().equals(KeyCode.ENTER)) {
@@ -153,6 +168,9 @@ public class MainFormController implements Initializable {
         }
     }
 
+    /** Used to search for a customer. The customer tableview is searched to see if a customer exists
+     * @param event occurs when a user clicks the search button
+     */
     @FXML
     void searchForCustomer(ActionEvent event) {
         custTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -176,6 +194,9 @@ public class MainFormController implements Initializable {
 
     }
 
+    /** Allows the user to update a customer record. Brings the user to the update customer screen
+     * @param event occurs when a user clicks the update button
+     */
     @FXML
     void updateCustomer(ActionEvent event) throws IOException, SQLException {
         if(!(custTableView.getSelectionModel().getSelectedItems().isEmpty())) {
@@ -197,6 +218,9 @@ public class MainFormController implements Initializable {
         }
     }
 
+    /** Allows a user to view appointments for a particular customer. Brings the user to the customer appointments screen
+     * @param event occurs when a user has a customer selected in the tableview and then clicks the view all appointments button
+     */
     @FXML
     void viewAppts(ActionEvent event) throws IOException {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
@@ -205,6 +229,7 @@ public class MainFormController implements Initializable {
         stage.show();
     }
 
+    /** The first method called in the class. Sets the customer tableview with customer objects.*/
     @Override
     public void initialize (URL url, ResourceBundle resourceBundle) {
         try {

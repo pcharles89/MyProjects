@@ -14,7 +14,14 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.TemporalAccessor;
 
+/** This class deals with accessing appointment information from the database. Queries the appointment table in the database
+ * and retrieves the results.*/
 public class AppointmentDAO {
+
+    /** Retrieves all appointments from the database. Queries the appointments table in the database and retrieves all
+     * appointments.
+     * @return returns all appointments from the appointment table in the database.
+     */
     public static ObservableList<Appointment> getAllAppointments() throws SQLException {
         String sqlSelectAllAppointments = "SELECT Appointment_ID, Title, Description, Location, Type, " +
                 "Start, End, Customer_ID, User_ID, Contact_ID FROM client_schedule.appointments";
@@ -55,6 +62,8 @@ public class AppointmentDAO {
         return allAppointments;
     }
 
+    /** Creates a new appointment in the database. Inserts the new appointment into the appointments table in the database using
+     * the arguments provided (which correspond to the tables fields).*/
     public static void createAppointment(int id, String title, String description, String location, String type, Timestamp start,
                                          Timestamp end, int customerId, int userId, int contactId) throws SQLException {
         String insertStatement = "INSERT INTO client_schedule.appointments(Appointment_ID, Title, Description, Location," +
@@ -76,6 +85,10 @@ public class AppointmentDAO {
         ps.executeUpdate();
     }
 
+    /** Updates an appointment in the database.
+     * @param index the appointment id of the appointment being updated
+     * @param appointment the new appointment after changes have been made
+     */
     public static void updateAppointment(int index, Appointment appointment) throws SQLException {
         Appointment searchedAppointment = AppointmentDAO.lookUpAppointment(index);
         AppointmentDAO.deleteAppointment(searchedAppointment);
@@ -86,6 +99,10 @@ public class AppointmentDAO {
                 appointment.getContactId());
     }
 
+    /** Looks up the appointment by id. Used in conjunction with the updateAppointment method to update an appointment.
+     * @param appointmentId the appointment id of the appointment that is to be updated
+     * @return returns the appointment that is going to be updated
+     */
     public static Appointment lookUpAppointment(int appointmentId) throws SQLException {
         for(Appointment appointment: AppointmentDAO.getAllAppointments()) {
             if(appointment.getId() == appointmentId) {
@@ -95,6 +112,9 @@ public class AppointmentDAO {
         return null;
     }
 
+    /** Deletes an appointment from the database. Queries the appointments table in the database and the appointment from it.
+     * @param appointment the appointment to be deleted
+     */
     public static void deleteAppointment(Appointment appointment) throws SQLException {
         String deleteStatement = "DELETE FROM client_schedule.appointments WHERE Appointment_ID = ?";
         JDBC.openConnection();
@@ -104,6 +124,9 @@ public class AppointmentDAO {
         ps.executeUpdate();
     }
 
+    /** Filters appointments by month. Queries the appointments table in the database and filters the results based on month.
+     * @return returns all the appointments in the requested month
+     */
     public static ObservableList<Appointment> getFilteredAppointmentsMonth() throws SQLException {
         LocalDateTime now = LocalDateTime.now();
         int currentMonth = now.getMonthValue();
@@ -149,6 +172,9 @@ public class AppointmentDAO {
         return allAppointments;
     }
 
+    /** Filters appointments by week. Queries the appointments table in the database and filters the results based on week.
+     * @return returns all the appointments in the requested week
+     */
     public static ObservableList<Appointment> getFilteredAppointmentsWeek() throws SQLException {
         DateTimeFormatter adjustTimes = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDateTime now = LocalDateTime.now();

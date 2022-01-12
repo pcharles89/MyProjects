@@ -26,6 +26,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+/** This class deals with the update customer appointment screen. It allows a user to update an existing appointment for a customer.*/
 public class UpdateCustApptController implements Initializable {
     private Stage stage;
     private Parent scene;
@@ -77,6 +78,9 @@ public class UpdateCustApptController implements Initializable {
     @FXML
     private Label addApptLbl;
 
+    /** Displays customer appointments in a tableview. Brings the user back to the customer appointments screen.
+     * @param event occurs when a user clicks the cancel button
+     */
     @FXML
     void backToViewAppts(ActionEvent event) throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "This will clear any unsaved work, continue?");
@@ -89,6 +93,9 @@ public class UpdateCustApptController implements Initializable {
         }
     }
 
+    /** Saves a customer appointment. Brings a user back to the customer appointments screen after saving.
+     * @param event occurs when a user clicks the save button
+     */
     @FXML
     void saveApptAction(ActionEvent event) throws IOException, SQLException {
         if (((titleTf.getText().equals("")) || (descriptionTf.getText().equals("")) || (locationTf.getText().equals(""))
@@ -202,6 +209,10 @@ public class UpdateCustApptController implements Initializable {
         }
     }
 
+    /** Receives appointment from the customer appointments screen. Populates all text fields and combo boxes with relevant
+     * information.
+     * @param appointment the specific appointment being updated is the one that is passed as an argument
+     */
     public void receiveAppointment(Appointment appointment) throws SQLException {
         apptIdLbl.setText(String.valueOf(appointment.getId()));
         titleTf.setText(appointment.getTitle());
@@ -248,6 +259,7 @@ public class UpdateCustApptController implements Initializable {
         endTimeCb.setValue(endTime);
     }
 
+    /** The first method called in the class. Sets the appointment Id to disabled.*/
     @Override
     public void initialize (URL url, ResourceBundle resourceBundle) {
         apptIdLbl.setDisable(true);

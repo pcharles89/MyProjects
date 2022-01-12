@@ -218,7 +218,7 @@ public class CustApptsController implements Initializable {
     }
 
     /** Used to search for an appointment. The appointment tableview is searched to see if an appointment exists
-     * @param event occurs when a user hits the enter/return button on their keyboard
+     * @param event occurs when a user hits the enter button on their keyboard
      */
     @FXML
     void onEnterAppt(KeyEvent event) {

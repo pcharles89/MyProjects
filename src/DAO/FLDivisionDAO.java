@@ -7,6 +7,8 @@ import javafx.collections.ObservableList;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/** This class deals with accessing first level division data from the database. Queries the first level division data in
+ * the database and retrieves the results.*/
 public class FLDivisionDAO {
     public static ObservableList<FLDivision> getAllDivisions() throws SQLException {
         String sqlSelectAllDivisions = "SELECT Division_ID, Division, Country_ID FROM client_schedule.first_level_divisions";
@@ -25,6 +27,8 @@ public class FLDivisionDAO {
         return allDivisions;
     }
 
+    /** Retrieves first level divisions from the database. Queries the first level divisions table in the database and
+     * retrieves all first level divisions.*/
     public static ObservableList<FLDivision> getFilteredDivisions(String country) throws SQLException {
         ObservableList<FLDivision> filteredDivisions = FXCollections.observableArrayList();
         switch (country) {

@@ -7,7 +7,11 @@ import javafx.collections.ObservableList;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/** This class deals with accessing country information from the database. Queries the countries table in the database and retrieves
+ * the results.*/
 public class CountryDAO {
+
+    /** Retrieves countries from the database. Queries the countries table in the database and retrieves all countries.*/
     public static ObservableList<Country> getAllCountries() throws SQLException {
     String sqlSelectAllCountries = "SELECT Country_ID, Country FROM client_schedule.countries";
     ObservableList<Country> allCountries = FXCollections.observableArrayList();

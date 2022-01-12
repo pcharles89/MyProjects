@@ -21,6 +21,7 @@ import java.sql.SQLException;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+/** This class deals with the update customer screen. Allows a user to update an existing customer.*/
 public class UpdateCustomerController implements Initializable {
     private Stage stage;
     private Parent scene;
@@ -52,6 +53,9 @@ public class UpdateCustomerController implements Initializable {
     @FXML
     private Button cancelBtn;
 
+    /** Displays all customers. Brings a user back to the main form.
+     * @param event occurs when a user clicks the cancel button
+     */
     @FXML
     void backToMainMenu(ActionEvent event) throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "This will clear any unsaved work, continue?");
@@ -64,6 +68,9 @@ public class UpdateCustomerController implements Initializable {
         }
     }
 
+    /** Saves a new customer. Brings the user back to the main form where the customer is added to the tableview.
+     * @param event occurs when a user clicks the save button
+     */
     @FXML
     void saveCustomer(ActionEvent event) throws SQLException, IOException {
         if(((custNameTf.getText().equals("")) || (custAddressTf.getText().equals("")) || (custPostalCodeTf.getText().equals(""))
@@ -86,12 +93,18 @@ public class UpdateCustomerController implements Initializable {
 
     }
 
+    /** Selects a country from the combo box. Allows the division combo box items to be set depending on the country selected.
+     * @param event occurs when a user selects a country from the combo box
+     */
     @FXML
     void selectCountry(ActionEvent event) throws SQLException {
         String country = custCountryCB.getSelectionModel().getSelectedItem().toString();
         custDivisionCB.setItems(FLDivisionDAO.getFilteredDivisions(country));
     }
 
+    /** Receives customer from the main form screen. Populates all text fields and combo boxes with relevant info.
+     * @param customer the specific customer being updated is the one passed as an argument
+     */
     public void receiveCustomer(Customer customer) throws SQLException {
         int divisionId = customer.getDivisionId();
         String country;
@@ -123,6 +136,7 @@ public class UpdateCustomerController implements Initializable {
         }
     }
 
+    /** The first method called in the class. Sets the customer id to disabled.*/
     @Override
     public void initialize (URL url, ResourceBundle resourceBundle) {
         custIdLbl.setDisable(true);

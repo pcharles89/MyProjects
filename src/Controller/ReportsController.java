@@ -30,6 +30,7 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
+/** This class deals with the reports screen. It allows a user to run reports based on various metrics and view the results.*/
 public class ReportsController implements Initializable {
 
     private Stage stage;
@@ -86,6 +87,9 @@ public class ReportsController implements Initializable {
     @FXML
     private TableColumn<Appointment, Integer> userCol;
 
+    /** Used to view customer appointments. Brings a user back to the customer appointments screen
+     * @param event occurs when a user hits the back button
+     */
     @FXML
     void backToAppts(ActionEvent event) throws IOException {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
@@ -94,6 +98,9 @@ public class ReportsController implements Initializable {
         stage.show();
     }
 
+    /** Displays appointments of contact selected. Populates tableview with appointment objects relating to the contact
+     * @param event occurs when the user selects a contact from the combo box
+     */
     @FXML
     void selectContact(ActionEvent event) throws SQLException {
         ObservableList<Appointment> filteredAppointments = FXCollections.observableArrayList();
@@ -105,6 +112,9 @@ public class ReportsController implements Initializable {
         apptTableview.setItems(filteredAppointments);
     }
 
+    /** Counts number of appointments by month and type. Will only generate the count if both combo boxes are selected.
+     * @param event occurs when the user selects a month from the month combo box.
+     */
     @FXML
     void selectMonth(ActionEvent event) throws SQLException {
         int counter = 0;
@@ -122,7 +132,9 @@ public class ReportsController implements Initializable {
         }
     }
 
-
+    /** Counts number of appointments by month and type. Will only generate the count if both combo boxes are selected.
+     * @param event occurs when the user selects a type from the type combo box.
+     */
     @FXML
     void selectType(ActionEvent event) throws SQLException {
         int counter = 0;
@@ -140,6 +152,10 @@ public class ReportsController implements Initializable {
         }
     }
 
+    /** -LAMBDA-Generates a count of appointments based on user id. A lambda expression makes this code more concise as it avoids
+     * using a loop and a conditional statement
+     * @param event occurs when a user selects a user id from the combo box
+     */
     @FXML
     void selectUser(ActionEvent event) throws SQLException {
         /* int count = 0;
@@ -155,6 +171,7 @@ public class ReportsController implements Initializable {
         report2Lbl.setText(String.valueOf(counter));
     }
 
+    /** The first method called in the class. Populates the combo boxes and prepares the tableview.*/
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         apptIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
