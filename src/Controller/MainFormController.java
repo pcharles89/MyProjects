@@ -84,6 +84,11 @@ public class MainFormController implements Initializable {
      */
     @FXML
     void exitApplication(ActionEvent event) {
+            /*Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "This will exit the application, are you sure?");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                System.exit(0);
+            }*/
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "This will exit the application, are you sure?");
         Optional<ButtonType> result = alert.showAndWait();
         result.ifPresent(x -> System.exit(0));
