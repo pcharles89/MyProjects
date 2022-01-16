@@ -12,7 +12,9 @@ import java.sql.SQLException;
  * the results.*/
 public class CustomerDAO {
 
-    /** Retrieves customers from the database. Queries the customers table in the database and retrieves all customers.*/
+    /** Retrieves customers from the database. Queries the customers table in the database and retrieves all customers.
+     * @return all the customers from the database
+     */
     public static ObservableList<Customer> getAllCustomers() throws SQLException {
         String sqlSelectAllCustomers = "SELECT Customer_ID, Customer_Name, Address, Postal_Code, Phone, " +
                 "Division_Id FROM client_schedule.customers";

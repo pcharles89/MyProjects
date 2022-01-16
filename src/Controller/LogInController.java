@@ -120,10 +120,18 @@ public class LogInController implements Initializable {
                     }
                 }
                 if (flag == 0) {
-                    Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
-                    alert2.setTitle("Alert");
-                    alert2.setContentText("There are no upcoming appointments");
-                    alert2.showAndWait();
+                    if ((Locale.getDefault().getLanguage().equals("en"))) {
+                        Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+                        alert2.setTitle("Alert");
+                        alert2.setContentText("There are no upcoming appointments");
+                        alert2.showAndWait();
+                    }
+                    else {
+                        Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+                        alert2.setTitle("Alert");
+                        alert2.setContentText("Il n'y a pas de rendez-vous à venir");
+                        alert2.showAndWait();
+                    }
                 }
                 stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
                 scene = FXMLLoader.load(getClass().getResource("/View/MainForm.fxml"));
@@ -244,10 +252,18 @@ public class LogInController implements Initializable {
                         }
                     }
                     if (flag == 0) {
-                        Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
-                        alert2.setTitle("Alert");
-                        alert2.setContentText("There are no upcoming appointments");
-                        alert2.showAndWait();
+                        if ((Locale.getDefault().getLanguage().equals("en"))) {
+                            Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+                            alert2.setTitle("Alert");
+                            alert2.setContentText("There are no upcoming appointments");
+                            alert2.showAndWait();
+                        }
+                        else {
+                            Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+                            alert2.setTitle("Alert");
+                            alert2.setContentText("Il n'y a pas de rendez-vous à venir");
+                            alert2.showAndWait();
+                        }
                     }
                     stage = (Stage) ((TextField) event.getSource()).getScene().getWindow();
                     scene = FXMLLoader.load(getClass().getResource("/View/MainForm.fxml"));
@@ -347,10 +363,18 @@ public class LogInController implements Initializable {
                         }
                     }
                     if (flag == 0) {
-                        Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
-                        alert2.setTitle("Alert");
-                        alert2.setContentText("There are no upcoming appointments");
-                        alert2.showAndWait();
+                        if ((Locale.getDefault().getLanguage().equals("en"))) {
+                            Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+                            alert2.setTitle("Alert");
+                            alert2.setContentText("There are no upcoming appointments");
+                            alert2.showAndWait();
+                        }
+                        else {
+                            Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+                            alert2.setTitle("Alert");
+                            alert2.setContentText("Il n'y a pas de rendez-vous à venir");
+                            alert2.showAndWait();
+                        }
                     }
                     stage = (Stage) ((TextField) event.getSource()).getScene().getWindow();
                     scene = FXMLLoader.load(getClass().getResource("/View/MainForm.fxml"));

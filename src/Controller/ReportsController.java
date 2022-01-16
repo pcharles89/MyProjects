@@ -25,6 +25,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -165,11 +166,18 @@ public class ReportsController implements Initializable {
             }
         }
         report2Lbl.setText(String.valueOf(count)); */
-        int counter = AppointmentDAO.getAllAppointments().stream().filter(w -> w.getUserId() ==
+        /*int counter = AppointmentDAO.getAllAppointments().stream().filter(w -> w.getUserId() ==
                 userCb.getSelectionModel().getSelectedItem().getId())
                 .mapToInt(Appointment::getUserId).sum();
-        report2Lbl.setText(String.valueOf(counter));
+        report2Lbl.setText(String.valueOf(counter)); */
+
+        List<Appointment> filtered = new ArrayList<>(AppointmentDAO.getAllAppointments());
+            Integer count = Math.toIntExact(filtered.stream()
+                    .filter((appointment) -> appointment.getUserId() == userCb.getSelectionModel().getSelectedItem().getId())
+                    .count());
+            report2Lbl.setText(String.valueOf(count));
     }
+
 
     /** The first method called in the class. Populates the combo boxes and prepares the tableview.*/
     @Override

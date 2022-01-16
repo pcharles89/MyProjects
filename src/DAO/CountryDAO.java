@@ -11,7 +11,9 @@ import java.sql.SQLException;
  * the results.*/
 public class CountryDAO {
 
-    /** Retrieves countries from the database. Queries the countries table in the database and retrieves all countries.*/
+    /** Retrieves countries from the database. Queries the countries table in the database and retrieves all countries.
+     * @return all the countries from the database
+     */
     public static ObservableList<Country> getAllCountries() throws SQLException {
     String sqlSelectAllCountries = "SELECT Country_ID, Country FROM client_schedule.countries";
     ObservableList<Country> allCountries = FXCollections.observableArrayList();

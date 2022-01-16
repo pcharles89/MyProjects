@@ -177,6 +177,7 @@ public class AppointmentDAO {
      */
     public static ObservableList<Appointment> getFilteredAppointmentsWeek() throws SQLException {
         DateTimeFormatter adjustTimes = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter adjustTimes2 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         String nowFormatted = adjustTimes.format(now);
         LocalDateTime nowPlus = now.plusDays(6);
@@ -212,8 +213,8 @@ public class AppointmentDAO {
             ZonedDateTime userDateTimeEnd = databaseDateTimeEnd.withZoneSameInstant(usersZone);
             LocalDateTime dateTimeTableEnd = userDateTimeEnd.toLocalDateTime();
 
-            Appointment appointment = new Appointment(apptId, title, description, location, type, adjustTimes.format(dateTimeTableStart),
-                    adjustTimes.format(dateTimeTableEnd), customerId, userId, contactId);
+            Appointment appointment = new Appointment(apptId, title, description, location, type, adjustTimes2.format(dateTimeTableStart),
+                    adjustTimes2.format(dateTimeTableEnd), customerId, userId, contactId);
             allAppointments.add(appointment);
         }
         JDBC.closeConnection();

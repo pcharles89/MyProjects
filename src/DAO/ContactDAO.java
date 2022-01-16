@@ -13,7 +13,9 @@ import java.sql.SQLException;
  * the results.*/
 public class ContactDAO {
 
-    /** Retrieves contacts from the database. Queries the contacts table in the database and retrieves all contacts.*/
+    /** Retrieves contacts from the database. Queries the contacts table in the database and retrieves all contacts.
+     * @return all the contacts from the database
+     */
     public static ObservableList<Contact> getAllContacts() throws SQLException {
         String sqlSelectAllContacts = "SELECT Contact_ID, Contact_Name, Email FROM client_schedule.contacts";
         ObservableList<Contact> allContacts = FXCollections.observableArrayList();

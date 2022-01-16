@@ -30,11 +30,6 @@ import java.util.ResourceBundle;
 public class UpdateCustApptController implements Initializable {
     private Stage stage;
     private Parent scene;
-    private static final LocalTime firstAppt = LocalTime.of(8,0,0);
-    private static final LocalTime lastAppt = LocalTime.of(21,45, 0);
-    private static final LocalTime businessClose = LocalTime.of(22, 0, 0);
-    private static final LocalTime earliestFirstApptEnd = LocalTime.of(8, 15, 0);
-    private int flag = 0;
 
     @FXML
     private Label apptIdLbl;
@@ -78,6 +73,15 @@ public class UpdateCustApptController implements Initializable {
     @FXML
     private Label addApptLbl;
 
+    private int flag = 0;
+
+    private static final LocalTime firstAppt = LocalTime.of(8,0,0);
+    private static final LocalTime lastAppt = LocalTime.of(21,45, 0);
+    private static final LocalTime businessClose = LocalTime.of(22, 0, 0);
+    private static final LocalTime earliestFirstApptEnd = LocalTime.of(8, 15, 0);
+
+
+
     /** Displays customer appointments in a tableview. Brings the user back to the customer appointments screen.
      * @param event occurs when a user clicks the cancel button
      */
@@ -115,6 +119,7 @@ public class UpdateCustApptController implements Initializable {
                     apptStartTime.getHour(), apptStartTime.getMinute());
             ZoneId localZone = ZoneId.systemDefault();
             ZonedDateTime apptStart = ZonedDateTime.of(appt, localZone);
+            LocalDateTime apptStartIf = apptStart.toLocalDateTime();
             ZonedDateTime apptStartCheck = apptStart.withZoneSameInstant(ZoneId.of("America/New_York"));
             LocalDateTime easternDateTimeStart = apptStartCheck.toLocalDateTime();
             ZonedDateTime utcDateTimeStart = apptStartCheck.withZoneSameInstant(ZoneId.of("UTC"));
@@ -126,6 +131,7 @@ public class UpdateCustApptController implements Initializable {
                     apptEndTime.getHour(), apptEndTime.getMinute());
             ZoneId localZoneEnd = ZoneId.systemDefault();
             ZonedDateTime apptEndZone = ZonedDateTime.of(apptEnd, localZoneEnd);
+            LocalDateTime apptEndIf = apptEndZone.toLocalDateTime();
             ZonedDateTime apptEndCheck = apptEndZone.withZoneSameInstant(ZoneId.of("America/New_York"));
             LocalDateTime easternDateTimeEnd = apptEndCheck.toLocalDateTime();
             ZonedDateTime utcDateTimeEnd = apptEndCheck.withZoneSameInstant(ZoneId.of("UTC"));
@@ -134,14 +140,30 @@ public class UpdateCustApptController implements Initializable {
             LocalTime easternTimeStart = easternDateTimeStart.toLocalTime();
             LocalTime easternTimeEnd = easternDateTimeEnd.toLocalTime();
 
-            if (easternTimeStart.isAfter(easternTimeEnd)) {
+            LocalDate date = startDp.getValue();
+            ZoneId localZoneEastern = ZoneId.of("America/New_York");
+            ZonedDateTime firstApptZdt = ZonedDateTime.of(date, firstAppt, localZoneEastern);
+            ZonedDateTime lastApptZdt = ZonedDateTime.of(date, lastAppt, localZoneEastern);
+            ZonedDateTime businessCloseZdt = ZonedDateTime.of(date, businessClose, localZoneEastern);
+            ZonedDateTime earliestFirstApptEndZdt = ZonedDateTime.of(date, earliestFirstApptEnd, localZoneEastern);
+            LocalDateTime firstApptLdt = firstApptZdt.toLocalDateTime();
+            LocalDateTime lastApptLdt = lastApptZdt.toLocalDateTime();
+            LocalDateTime businessCloseLdt = businessCloseZdt.toLocalDateTime();
+            LocalDateTime earliestFirstApptLdt = earliestFirstApptEndZdt.toLocalDateTime();
+            LocalTime firstApptTime = firstApptLdt.toLocalTime();
+            LocalTime lastApptTime = lastApptLdt.toLocalTime();
+            LocalTime businessCloseTime = businessCloseLdt.toLocalTime();
+            LocalTime earliestFirstApptEndTime = earliestFirstApptLdt.toLocalTime();
+
+            if ((apptStartTime.isAfter(apptEndTime)) || (apptStartTime.equals(apptEndTime)))
+            {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error Dialogue");
-                alert.setContentText("Please ensure start time is before end time");
+                alert.setContentText("Invalid appointment");
                 alert.showAndWait();
             }
-            else if ((easternTimeStart.isBefore(firstAppt) || easternTimeStart.isAfter(lastAppt)) || (easternTimeEnd.isBefore(earliestFirstApptEnd)
-                    || easternTimeEnd.isAfter(businessClose))) {
+            else if ((easternDateTimeStart.isBefore(firstApptLdt) || easternDateTimeStart.isAfter(lastApptLdt)) || (easternDateTimeEnd.isBefore(earliestFirstApptLdt)
+                    || easternDateTimeEnd.isAfter(businessCloseLdt))) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error Dialogue");
                 alert.setContentText("Business hours are 8 a.m. - 10 p.m. EST");
@@ -157,12 +179,19 @@ public class UpdateCustApptController implements Initializable {
                             //System.out.println("test");
                             Timestamp dbTimeStart = Timestamp.valueOf(appointment.getStart());
                             Timestamp dbTimeEnd = Timestamp.valueOf(appointment.getEnd());
+
                             //System.out.println(dbTimeEnd);
-                            LocalDateTime dbDateTimeStart = dbTimeStart.toLocalDateTime();
-                            LocalDateTime dbDateTimeEnd = dbTimeEnd.toLocalDateTime();
+                            LocalDateTime apptStartCompare = dbTimeStart.toLocalDateTime();
+                            LocalDateTime apptEndCompare = dbTimeEnd.toLocalDateTime();
+                            /*ZonedDateTime apptStart2 = ZonedDateTime.of(dbDateTimeStart, ZoneId.of("UTC"));
+                            ZonedDateTime apptEnd2 = ZonedDateTime.of(dbDateTimeEnd, ZoneId.of("UTC"));
+                            ZonedDateTime apptStartLocal = apptStart2.withZoneSameInstant(ZoneId.systemDefault());
+                            ZonedDateTime apptEndLocal = apptEnd2.withZoneSameInstant(ZoneId.systemDefault());
+                            LocalDateTime apptStartCompare = apptStartLocal.toLocalDateTime();
+                            LocalDateTime apptEndCompare = apptEndLocal.toLocalDateTime(); */
                             System.out.println(easternDateTimeEnd);
-                            if (((easternDateTimeStart.isAfter(dbDateTimeStart)) || (easternDateTimeStart.isEqual(dbDateTimeStart))) &&
-                                    (easternDateTimeStart.isBefore(dbDateTimeEnd)) && (!(apptIdLbl.getText().equalsIgnoreCase(String.valueOf(appointment.getId()))))) {
+                            if (((apptStartIf.isAfter(apptStartCompare)) || (apptStartIf.isEqual(apptStartCompare))) &&
+                                    (apptStartIf.isBefore(apptEndCompare)) && (!(apptIdLbl.getText().equalsIgnoreCase(String.valueOf(appointment.getId()))))) {
                                 Alert alert = new Alert(Alert.AlertType.ERROR);
                                 alert.setTitle("Error Dialogue");
                                 alert.setContentText("Appointment overlap error");
@@ -170,8 +199,8 @@ public class UpdateCustApptController implements Initializable {
                                 flag++;
                                 break mainLoop;
                             }
-                            if (((easternDateTimeEnd.isAfter(dbDateTimeStart)) && (easternDateTimeEnd.isBefore(dbDateTimeEnd))) ||
-                                    (easternDateTimeEnd.isEqual(dbDateTimeEnd)) && (!(apptIdLbl.getText().equalsIgnoreCase(String.valueOf(appointment.getId()))))) {
+                            if (((apptEndIf.isAfter(apptStartCompare)) && (apptEndIf.isBefore(apptEndCompare))) ||
+                                    (apptEndIf.isEqual(apptEndCompare)) && (!(apptIdLbl.getText().equalsIgnoreCase(String.valueOf(appointment.getId()))))) {
                                 Alert alert = new Alert(Alert.AlertType.ERROR);
                                 alert.setTitle("Error Dialogue");
                                 alert.setContentText("Appointment overlap error");
@@ -179,8 +208,8 @@ public class UpdateCustApptController implements Initializable {
                                 flag++;
                                 break mainLoop;
                             }
-                            if(((easternDateTimeStart.isBefore(dbDateTimeStart)) || (easternDateTimeStart.equals(dbDateTimeStart))) &&
-                                    ((easternDateTimeEnd.isAfter(dbDateTimeEnd)) || (easternDateTimeEnd.isEqual(dbDateTimeEnd))) &&
+                            if(((apptStartIf.isBefore(apptStartCompare)) || (apptStartIf.equals(apptStartCompare))) &&
+                                    ((apptEndIf.isAfter(apptEndCompare)) || (apptEndIf.isEqual(apptEndCompare))) &&
                                     (!(apptIdLbl.getText().equalsIgnoreCase(String.valueOf(appointment.getId()))))) {
                                 Alert alert = new Alert(Alert.AlertType.ERROR);
                                 alert.setTitle("Error Dialogue");
@@ -250,8 +279,8 @@ public class UpdateCustApptController implements Initializable {
             businessTimeStart = businessTimeStart.plusMinutes(15);
             businessTimeEnd = businessTimeStart.plusMinutes(15);
         }
-        startTimeCb.getItems().add(LocalTime.of(23, 30));
-        endTimeCb.getItems().add(LocalTime.of(23, 30));
+        startTimeCb.getItems().add(LocalTime.of(23, 45));
+        endTimeCb.getItems().add(LocalTime.of(23, 45));
 
         LocalTime startTime = LocalTime.parse(splitStartTime);
         LocalTime endTime = LocalTime.parse(splitEndTime);

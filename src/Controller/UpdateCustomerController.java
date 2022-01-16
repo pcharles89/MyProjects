@@ -1,8 +1,10 @@
 package Controller;
 
+import DAO.AppointmentDAO;
 import DAO.CountryDAO;
 import DAO.CustomerDAO;
 import DAO.FLDivisionDAO;
+import Model.Appointment;
 import Model.Country;
 import Model.Customer;
 import Model.FLDivision;
@@ -18,8 +20,11 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 /** This class deals with the update customer screen. Allows a user to update an existing customer.*/
 public class UpdateCustomerController implements Initializable {
@@ -102,9 +107,11 @@ public class UpdateCustomerController implements Initializable {
         custDivisionCB.setItems(FLDivisionDAO.getFilteredDivisions(country));
     }
 
-    /** Receives customer from the main form screen. Populates all text fields and combo boxes with relevant info.
+    /** -LAMBDA-Receives customer from the main form screen. Populates all text fields and combo boxes with relevant info.
+     * Lambda expression used in order to populate the combo box without using a for loop and a nested conditional statement
      * @param customer the specific customer being updated is the one passed as an argument
      */
+
     public void receiveCustomer(Customer customer) throws SQLException {
         int divisionId = customer.getDivisionId();
         String country;
@@ -128,12 +135,19 @@ public class UpdateCustomerController implements Initializable {
             custCountryCB.getSelectionModel().select(1);
         }
         custDivisionCB.setItems(FLDivisionDAO.getFilteredDivisions(country));
-        for(FLDivision division: custDivisionCB.getItems()) {
+        /*for(FLDivision division: custDivisionCB.getItems()) {
             if(divisionId == division.getId()) {
                 custDivisionCB.getSelectionModel().select(division);
                 break;
             }
-        }
+        }*/
+        List<FLDivision> filtered = new ArrayList<>(custDivisionCB.getItems());
+        Optional<FLDivision> selected = filtered.stream()
+                .filter(flDivision -> flDivision.getId() == divisionId)
+                .findAny();
+        FLDivision populate = selected.orElse(null);
+        custDivisionCB.getSelectionModel().select(populate);
+
     }
 
     /** The first method called in the class. Sets the customer id to disabled.*/
