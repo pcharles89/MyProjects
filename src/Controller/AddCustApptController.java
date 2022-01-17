@@ -163,6 +163,7 @@ public class AddCustApptController implements Initializable {
                 mainLoop: {
                 for (Appointment appointment : AppointmentDAO.getAllAppointments()) {
                     if (Integer.parseInt(String.valueOf(custIdCb.getSelectionModel().getSelectedItem())) == appointment.getCustomerId()) {
+                        flag = 0;
                         System.out.println("test");
                         Timestamp dbTimeStart = Timestamp.valueOf(appointment.getStart());
                         Timestamp dbTimeEnd = Timestamp.valueOf(appointment.getEnd());
